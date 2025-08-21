@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environnement virtuel
+env/
+venv/
+ENV/
+.venv/
+
+# SQLite DB
+back/data/database.db
+
+# Config et variables d'environnement
+*.env
+.env.*
+
+# Logs
+*.log
+
+# VSCode
+.vscode/
+
+# Mac/Windows
+.DS_Store
+Thumbs.db
+
+# Tests/coverage
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.pyc
+
+# Build
+build/
+dist/
+*.egg-info/
+.eggs/
