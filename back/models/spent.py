@@ -2,6 +2,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from typing import List, Optional
 from core.database import Base
+import datetime
 
 class Category(Base):
     __tablename__ = "categories"
@@ -20,3 +21,4 @@ class Spent(Base):
     description: Mapped[str]
     category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"))
     category: Mapped[Category] = relationship(back_populates="spents")
+    date: Mapped[datetime.date] = mapped_column(nullable=False)
