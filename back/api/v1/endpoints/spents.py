@@ -14,3 +14,7 @@ def create_spent(spent: SpentCreate, db: Session = Depends(get_db)):
 @router.get("/", response_model=List[SpentRead])
 def read_spents(db: Session = Depends(get_db)):
     return crud_spent.get_spents(db=db)
+
+@router.delete("/{spent_id}")
+def delete_spent(spent_id: int, db: Session = Depends(get_db)):
+    return crud_spent.delete_spent(spent_id=spent_id, db=db)
