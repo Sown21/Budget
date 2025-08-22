@@ -25,10 +25,8 @@ class CategoryRead(BaseModel):
     class Config:
         from_attributes = True
 
-class SubCategoryRead(BaseModel):
-    id: int
-    name: str
-    parent_id: Optional[int]
-
-    class Config:
-        from_attributes = True
+class SpentUpdate(BaseModel):
+    name: Optional[str] = None
+    amount: Optional[float] = None
+    description: Optional[str] = None
+    category_id: Optional[int] = None
