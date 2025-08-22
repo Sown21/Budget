@@ -5,10 +5,8 @@ from models.spent import Category
 def create_defaut_categories():
     db = SessionLocal()
     try:
-        existing_categories = db.query(Category).count()
-        if existing_categories > 0:
-            print("Les catégories existent déjà")
-            return
+        existing_categories = db.query(Category.name).all()
+        existing_names = [name for (name,) in existing_categories]
         
         default_categories = [
             Category(id=1, name="Alimentation", parent_id=None),
@@ -24,7 +22,8 @@ def create_defaut_categories():
         ]
 
         for category in default_categories:
-            db.add(category)
+            if category.name not in existing_names:
+                db.add(category)
 
         db.commit()
 
@@ -56,7 +55,8 @@ def create_defaut_categories():
         ]
 
         for sub_category in sub_categories:
-            db.add(sub_category)
+            if sub_category.name not in existing_names:
+                db.add(sub_category)
 
         db.commit()
         print("Les Catégories et sous catégories ont été créées avec succès !")
