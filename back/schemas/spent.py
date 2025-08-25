@@ -7,21 +7,21 @@ class SpentCreate(BaseModel):
     amount: float
     description: str
     category_id: int
-    date: str
+    date: date
 
-    @field_validator('date')
-    @classmethod
-    def parse_date(cls, v):
-        if v is None:
-            return None
-        if isinstance(v, str):
-            try:
-                return datetime.strptime(v, "%d/%m/%Y").date()
-            except Exception:
-                raise ValueError("Format de date invalide, attendu JJ/MM/AAAA")
-        if isinstance(v, date):
-            return v
-        raise ValueError("Type de date non supporté")
+    # @field_validator('date')
+    # @classmethod
+    # def parse_date(cls, v):
+    #     if v is None:
+    #         return None
+    #     if isinstance(v, str):
+    #         try:
+    #             return datetime.strptime(v, "%d/%m/%Y").date()
+    #         except Exception:
+    #             raise ValueError("Format de date invalide, attendu JJ/MM/AAAA")
+    #     if isinstance(v, date):
+    #         return v
+    #     raise ValueError("Type de date non supporté")
 
 class SpentRead(BaseModel):
     id: int
@@ -51,16 +51,16 @@ class SpentUpdate(BaseModel):
     category_id: Optional[int] = None
     date: Optional[str] = None
 
-    @field_validator('date')
-    @classmethod
-    def parse_date(cls, v):
-        if v is None:
-            return None
-        if isinstance(v, str):
-            try:
-                return datetime.strptime(v, "%d/%m/%Y").date()
-            except Exception:
-                raise ValueError("Format de date invalide, attendu JJ/MM/AAAA")
-        if isinstance(v, date):
-            return v
-        raise ValueError("Type de date non supporté")
+    # @field_validator('date')
+    # @classmethod
+    # def parse_date(cls, v):
+    #     if v is None:
+    #         return None
+    #     if isinstance(v, str):
+    #         try:
+    #             return datetime.strptime(v, "%d/%m/%Y").date()
+    #         except Exception:
+    #             raise ValueError("Format de date invalide, attendu JJ/MM/AAAA")
+    #     if isinstance(v, date):
+    #         return v
+    #     raise ValueError("Type de date non supporté")
