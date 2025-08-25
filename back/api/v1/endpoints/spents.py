@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from crud import spent as crud_spent
 from schemas.spent import SpentCreate, SpentRead, SpentUpdate
 from api.deps import get_db
+from datetime import date
 
 router = APIRouter()
 
@@ -12,8 +13,24 @@ def create_spent(spent: SpentCreate, db: Session = Depends(get_db)):
     return crud_spent.create_spent(db=db, spent=spent)
 
 @router.get("/", response_model=List[SpentRead])
-def read_spents(db: Session = Depends(get_db)):
-    return crud_spent.get_spents(db=db)
+def read_spents(
+    category_id: Optional[int] = Query(None),
+    date_min: Optional[date] = Query(None),
+    date_max: Optional[date] = Query(None),
+    amount_min: Optional[float] = Query(None),
+    amount_max: Optional[float] = Query(None),
+    search: Optional[str] = Query(None),
+    db: Session = Depends(get_db)
+    ):
+    return crud_spent.get_spents(
+        category_id=category_id,
+        date_min=date_min,
+        date_max=date_max,
+        amount_min=amount_min,
+        amount_max=amount_max,
+        search=search,
+        db=db
+        )
 
 @router.delete("/{spent_id}")
 def delete_spent(spent_id: int, db: Session = Depends(get_db)):
