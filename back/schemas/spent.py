@@ -29,6 +29,7 @@ class SpentRead(BaseModel):
     amount: float
     description: str
     category_id: int
+    category_name: Optional[str] = None
     date: date
 
     class Config:

@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from models.spent import Spent
 from schemas.spent import SpentCreate, SpentUpdate
 from fastapi import HTTPException
@@ -16,9 +16,9 @@ def get_spents(
         amount_min: Optional[float] = None,
         amount_max: Optional[float] = None,
         search: Optional[str] = None
-        ) -> List[Spent]:
+        ) -> List[dict]:
 
-    query = db.query(Spent)
+    query = db.query(Spent).options(selectinload(Spent.category))
 
     if category_id is not None:
         query = query.filter(Spent.category_id == category_id)
@@ -33,7 +33,19 @@ def get_spents(
     if search is not None:
         query = query.filter(Spent.name.ilike(f"%{search}%"))
 
-    return query.all()
+    spents = query.all()
+    return [
+        {
+            "id": spent.id,
+            "name": spent.name,
+            "amount": spent.amount,
+            "description": spent.description,
+            "category_id": spent.category_id,
+            "category_name": spent.category.name if spent.category else None,
+            "date": spent.date
+        }
+        for spent in spents
+    ]
 
 def create_spent(db: Session, spent: SpentCreate):
     db_spent = Spent(**spent.model_dump())

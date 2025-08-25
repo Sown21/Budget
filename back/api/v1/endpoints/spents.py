@@ -21,16 +21,16 @@ def read_spents(
     amount_max: Optional[float] = Query(None),
     search: Optional[str] = Query(None),
     db: Session = Depends(get_db)
-    ):
+):
     return crud_spent.get_spents(
+        db=db,
         category_id=category_id,
         date_min=date_min,
         date_max=date_max,
         amount_min=amount_min,
         amount_max=amount_max,
-        search=search,
-        db=db
-        )
+        search=search
+    )
 
 @router.delete("/{spent_id}")
 def delete_spent(spent_id: int, db: Session = Depends(get_db)):
