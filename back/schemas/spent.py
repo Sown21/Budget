@@ -1,5 +1,5 @@
 from pydantic import BaseModel, field_validator
-from typing import Optional
+from typing import Optional, List
 from datetime import date, datetime
 
 class SpentCreate(BaseModel):
@@ -39,6 +39,7 @@ class CategoryRead(BaseModel):
     id: int
     name: str
     parent_id: Optional[int] = None
+    children: List["CategoryRead"] = []
 
     class Config:
         from_attributes = True
