@@ -62,7 +62,7 @@ const Saisis = () => {
     };
 
     return (
-        <div className="saisie_bg flex flex-col h-screen">
+        <div className="saisie_bg flex flex-col">
             <div className="saisie_card">
                 <h2 className="text-4xl font-extrabold text-center mb-12 text-blue-600">Saisie des dépenses</h2>
                 <SpentForm

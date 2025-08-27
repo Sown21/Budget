@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
 const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Valider" }) => {
+  const [message, setMessage] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
   const [categorySelected, setCategorySelected] = useState(initialValues.category_id || "");
   const [subCategorySelected, setSubCategorySelected] = useState(initialValues.subCategory_id || "");
   const [name, setName] = useState(initialValues.name || "");
@@ -22,19 +24,27 @@ const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Va
     } else {
       catId = Number(categorySelected);
     }
-    onSubmit({
+    Promise.resolve(onSubmit({
       name,
       amount: Number(amount),
       description,
       category_id: catId,
       date
+    })).then(() => {
+      setMessage("Ajout de la saisie réussi !");
+      setShowMessage(true);
+      setCategorySelected("");
+      setSubCategorySelected("");
+      setName("");
+      setDescription("");
+      setAmount("");
+      setDate("");
+      setTimeout(() => setShowMessage(false), 3000);
+    }).catch(() => {
+      setMessage("Erreur lors de l'ajout de la saisie !");
+      setShowMessage(true);
+      setTimeout(() => setShowMessage(false), 3000);
     });
-    setCategorySelected("");
-    setSubCategorySelected("");
-    setName("");
-    setDescription("");
-    setAmount("");
-    setDate("");
   };
 
   return (
@@ -65,6 +75,11 @@ const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Va
       <div className="col-span-1 md:col-span-2 flex justify-center">
         <button className="btn_form" type="submit">{submitLabel}</button>
       </div>
+      {message && (
+        <div className={`col-span-1 md:col-span-2 flex justify-center mt-2 transition-opacity duration-700 ${showMessage ? 'opacity-100' : 'opacity-0'}`}>
+          <span className={message.includes("Erreur") ? "text-red-500" : "text-green-500"}>{message}</span>
+        </div>
+      )}
     </form>
   );
 };
