@@ -9,7 +9,7 @@ const Table = ({ data, onDelete, onModify }) => {
             <div className="max-h-96 overflow-auto pb-10">
                 <table className="min-w-full border border-gray-300">
                 <thead>
-                    <tr className="border border-gray-800 bg-gray-800 text-white">
+                    <tr className="border border-gray-800 bg-blue-900 text-white">
                         <th className="p-2">Nom</th>
                         <th className="p-2">Montant</th>
                         <th className="p-2">Catégorie</th>
@@ -20,7 +20,7 @@ const Table = ({ data, onDelete, onModify }) => {
                 </thead>
                 <tbody>
                     {data.map((spent, idx) => (
-                        <tr key={spent.id} className={idx % 2 === 0 ? "bg-gray-100" : "bg-white"}>
+                        <tr key={spent.id} className={idx % 2 === 0 ? "bg-gray-100 hover:bg-gray-200" : "bg-blue-100 hover:bg-blue-200"}>
                             <td className="p-2 border">{spent.name}</td>
                             <td className="p-2 border">{spent.amount}</td>
                             <td className="p-2 border">{spent.category_name}</td>
@@ -28,11 +28,11 @@ const Table = ({ data, onDelete, onModify }) => {
                             <td className="p-2 border">{spent.description}</td>
                             <td className="p-2 border">
                                 <div className="flex gap-2">
-                                    <button onClick={() => onDelete(spent.id)}>
-                                        <IoTrash className="text-red-500 hover:text-red-600 cursor-pointer"/>
+                                    <button className="btn_actions flex items-center justify-center" onClick={() => onDelete(spent.id)}>
+                                        <IoTrash className="text-xl" />
                                     </button>
-                                    <button onClick={() => onModify(spent.id)}>
-                                        <HiOutlinePencilSquare className="text-blue-500 hover:text-blue-600 cursor-pointer"/>
+                                    <button className="btn_actions flex items-center justify-center" onClick={() => onModify(spent.id)}>
+                                        <HiOutlinePencilSquare className="text-xl" />
                                     </button>
                                 </div>
                             </td>

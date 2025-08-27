@@ -11,6 +11,8 @@ const Saisis = () => {
     useEffect(() => {
         const fetchData = async () => {
             const spents = await getSpents();
+            // Tri par date décroissante
+            spents.sort((a, b) => new Date(b.date) - new Date(a.date));
             setData(spents);
             const spents_categories = await getCategories();
             setCategories(spents_categories);
@@ -19,9 +21,10 @@ const Saisis = () => {
     }, []); // [] exéctué une seule fois au montage
 
     const handleSpentSubmit = async (payload) => {
-        await postSpents(payload);
-        const spents = await getSpents();
-        setData(spents);
+    await postSpents(payload);
+    const spents = await getSpents();
+    spents.sort((a, b) => new Date(b.date) - new Date(a.date));
+    setData(spents);
     };
 
     const [ idToDelete, setIdToDelete ] = useState(null);
@@ -33,11 +36,12 @@ const Saisis = () => {
     }
 
     const confirmDelete = async () => {
-        await deleteSpent(idToDelete);
-        const spents = await getSpents();
-        setData(spents);
-        setShowDeleteConfirm(false);
-        setIdToDelete(null)
+    await deleteSpent(idToDelete);
+    const spents = await getSpents();
+    spents.sort((a, b) => new Date(b.date) - new Date(a.date));
+    setData(spents);
+    setShowDeleteConfirm(false);
+    setIdToDelete(null)
     }
 
     const [ showModify, setShowModify ] = useState(false);
@@ -51,6 +55,7 @@ const Saisis = () => {
     const handleModify = async (payload) => {
     await modifySpent(idToModify, payload);
     const spents = await getSpents();
+    spents.sort((a, b) => new Date(b.date) - new Date(a.date));
     setData(spents);
     setShowModify(false);
     setIdToModify("");
