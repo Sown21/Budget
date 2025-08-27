@@ -6,7 +6,8 @@ const Table = ({ data, onDelete, onModify }) => {
 
     return (
         <div className="rounded-lg shadow overflow-hidden mx-8 my-8">
-            <table className="min-w-full border border-gray-300">
+            <div className="max-h-96 overflow-auto pb-10">
+                <table className="min-w-full border border-gray-300">
                 <thead>
                     <tr className="border border-gray-800 bg-gray-800 text-white">
                         <th className="p-2">Nom</th>
@@ -38,7 +39,8 @@ const Table = ({ data, onDelete, onModify }) => {
                         </tr>
                     ))}
                 </tbody>
-            </table> 
+                </table>
+            </div>
         </div>
     )
 };

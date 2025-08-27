@@ -38,7 +38,7 @@ const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Va
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="saisie_form">
       <select className="input_form" name="category" onChange={e => { setCategorySelected(e.target.value); setSubCategorySelected(""); }} required value={categorySelected}>
         <option value="">Choisir une catégorie</option>
         {categories.map((cat) => (
@@ -58,11 +58,13 @@ const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Va
           ))}
         </select>
       )}
-      <input className="input_form" type="text" name="name" placeholder="Nom" required value={name} onChange={e => setName(e.target.value)} />
-      <input className="input_form" type="text" name="description" placeholder="Description (optionnel)" value={description} onChange={e => setDescription(e.target.value)} />
+      <input className="input_form col-span-1 md:col-span-2 w-full" type="text" name="name" placeholder="Nom" required value={name} onChange={e => setName(e.target.value)} />
+      <input className="input_form col-span-1 md:col-span-2 w-full" type="text" name="description" placeholder="Description (optionnel)" value={description} onChange={e => setDescription(e.target.value)} />
       <input className="input_form" type="text" name="amount" placeholder="Montant €" required value={amount} onChange={e => setAmount(e.target.value)} />
       <input className="input_form" type="date" name="date" required value={date} onChange={e => setDate(e.target.value)} />
-      <button type="submit">{submitLabel}</button>
+      <div className="col-span-1 md:col-span-2 flex justify-center">
+        <button className="btn_form" type="submit">{submitLabel}</button>
+      </div>
     </form>
   );
 };

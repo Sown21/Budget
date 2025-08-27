@@ -57,17 +57,21 @@ const Saisis = () => {
     };
 
     return (
-        <div>
-            <SpentForm
-                categories={categories}
-                onSubmit={handleSpentSubmit}
-                submitLabel="Ajouter"
-            />
+        <div className="saisie_bg flex flex-col h-screen">
+            <div className="saisie_card">
+                <h2 className="text-4xl font-extrabold text-center mb-12 text-blue-600">Saisie des dépenses</h2>
+                <SpentForm
+                    categories={categories}
+                    onSubmit={handleSpentSubmit}
+                    submitLabel="Ajouter"
+                />
+            </div>
             <Table 
                 data = {data}
                 onDelete = {handleDelete}
                 onModify = {handleModifyClick}
             />
+
             {showDeleteConfirm && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
                     <div className="bg-gray-200 p-4 rounded border-2 border-gray-400 shadow-lg">

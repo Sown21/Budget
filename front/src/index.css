@@ -1,7 +1,23 @@
 @import "tailwindcss";
 
 .input_form {
-  @apply border rounded border-gray-400 bg-gray-200 px-2 py-1
+  @apply border border-blue-300 rounded-xl bg-blue-100 px-2 py-2 text-blue-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-700
+}
+
+.btn_form {
+  @apply bg-gradient-to-r from-blue-700 via-blue-500 to-blue-400 text-white font-bold py-2 px-8 mt-6 rounded shadow-lg cursor-pointer hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-700
+}
+
+.saisie_bg {
+  @apply min-h-screen bg-gradient-to-br from-white via-blue-100 to-blue-300 py-1
+}
+
+.saisie_card {
+  @apply max-w-3xl mx-auto w-full border border-blue-200 py-10 px-5 mb-8 rounded-2xl bg-white shadow-xl 
+}
+
+.saisie_form {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4 w-full px-8
 }
 
 /* :root {
