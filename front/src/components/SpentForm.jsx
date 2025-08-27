@@ -9,23 +9,37 @@ const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Va
   const [date, setDate] = useState(initialValues.date || "");
 
   const selectedCat = categories.find(cat => cat.id === Number(categorySelected));
-  const subCategories = selectedCat?.children || [];
+  const subCategories = selectedCat?.children?.length ? selectedCat.children : [];
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Si la catégorie sélectionnée a des sous-catégories et aucune n'est choisie, on envoie l'id du parent
+    let catId;
+    if (subCategories.length > 0 && !subCategorySelected) {
+      catId = Number(categorySelected);
+    } else if (subCategorySelected) {
+      catId = Number(subCategorySelected);
+    } else {
+      catId = Number(categorySelected);
+    }
     onSubmit({
       name,
-      amount,
+      amount: Number(amount),
       description,
-      category_id: subCategorySelected || categorySelected,
+      category_id: catId,
       date
     });
-    // Optionnel: reset le form ici si tu veux
+    setCategorySelected("");
+    setSubCategorySelected("");
+    setName("");
+    setDescription("");
+    setAmount("");
+    setDate("");
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <select className="input_form" name="category" onChange={e => setCategorySelected(e.target.value)} required value={categorySelected}>
+      <select className="input_form" name="category" onChange={e => { setCategorySelected(e.target.value); setSubCategorySelected(""); }} required value={categorySelected}>
         <option value="">Choisir une catégorie</option>
         {categories.map((cat) => (
           <option key={cat.id} value={cat.id}>{cat.name}</option>

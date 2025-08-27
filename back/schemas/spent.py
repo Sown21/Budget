@@ -49,18 +49,16 @@ class SpentUpdate(BaseModel):
     amount: Optional[float] = None
     description: Optional[str] = None
     category_id: Optional[int] = None
-    date: Optional[str] = None
+    date: Optional[date]
 
-    # @field_validator('date')
-    # @classmethod
-    # def parse_date(cls, v):
-    #     if v is None:
-    #         return None
-    #     if isinstance(v, str):
-    #         try:
-    #             return datetime.strptime(v, "%d/%m/%Y").date()
-    #         except Exception:
-    #             raise ValueError("Format de date invalide, attendu JJ/MM/AAAA")
-    #     if isinstance(v, date):
-    #         return v
-    #     raise ValueError("Type de date non supporté")
+    @field_validator('date', mode='before')
+    @classmethod
+    def parse_date(cls, v):
+        if v is None or v == "":
+            return None
+        if isinstance(v, str):
+            try:
+                return datetime.strptime(v, "%Y-%m-%d").date()
+            except Exception:
+                raise ValueError("Format de date invalide, attendu YYYY-MM-DD")
+        return v

@@ -15,7 +15,7 @@ export const deleteSpent = async (id) => {
     return response.data
 }
 
-export const modifySpent = async (id) => {
-    const response = await instance.put(`/spents/${id}`)
+export const modifySpent = async (id, payload) => {
+    const response = await instance.put(`/spents/${id}`, payload)
     return response.data
 }

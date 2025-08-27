@@ -2,7 +2,7 @@ import { IoTrash } from "react-icons/io5";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import { useState } from "react"
 
-const Table = ({ data, onDelete }) => {
+const Table = ({ data, onDelete, onModify }) => {
 
     return (
         <div className="rounded-lg shadow overflow-hidden mx-8 my-8">
