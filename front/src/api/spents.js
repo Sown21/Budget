@@ -14,3 +14,8 @@ export const deleteSpent = async (id) => {
     const response = await instance.delete(`/spents/${id}`)
     return response.data
 }
+
+export const modifySpent = async (id) => {
+    const response = await instance.put(`/spents/${id}`)
+    return response.data
+}

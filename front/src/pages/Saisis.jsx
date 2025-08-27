@@ -1,7 +1,8 @@
 import Table from "../components/Table";
-import { deleteSpent, getSpents, postSpents } from "../api/spents";
+import { deleteSpent, getSpents, postSpents, modifySpent } from "../api/spents";
 import { getCategories } from "../api/categories";
 import { useState, useEffect } from "react"
+import SpentForm from "../components/SpentForm";
 
 const Saisis = () => {
     const [ data, setData ] = useState([]);
@@ -26,19 +27,11 @@ const Saisis = () => {
     const selectedCat = categories.find(cat => cat.id === Number(categorySelected));
     const subCategories = selectedCat?.children || [];
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const payload = {
-            name,
-            amount,
-            description,
-            category_id: subCategorySelected ||categorySelected,
-            date
-        };
+    const handleSpentSubmit = async (payload) => {
         await postSpents(payload);
-        const spents = await getSpents(); // récupère la liste complète
+        const spents = await getSpents();
         setData(spents);
-    }
+    };
 
     const [ idToDelete, setIdToDelete ] = useState(null);
     const [ showDeleteConfirm, setShowDeleteConfirm ] = useState(false);
@@ -56,34 +49,17 @@ const Saisis = () => {
         setIdToDelete(null)
     }
 
+    const handleModify = async (id) => {
+        
+    }
+
     return (
         <div>
-            <form onSubmit={handleSubmit}>
-                <select className="input_form" name="category" onChange={e => setCategorySelected(e.target.value)} required>
-                    <option value="">Choisir une catégorie</option>
-                    {categories.map((cat, idx) => (
-                        <option key={idx} value={cat.id}>{cat.name}</option>
-                    ))}
-                </select>
-                {subCategories.length > 0 && (
-                    <select
-                        className="input_form"
-                        name="subcategory"
-                        value={subCategorySelected}
-                        onChange={e => setSubCategorySelected(e.target.value)}
-                    >
-                        <option value="">Choisir une sous-catégorie</option>
-                        {subCategories.map(subcat => (
-                            <option key={subcat.id} value={subcat.id}>{subcat.name}</option>
-                        ))}
-                    </select>
-                )}
-                <input className="input_form" type="text" name="name" placeholder="Nom" required onChange={e => setName(e.target.value)}></input>
-                <input className="input_form" type="text" name="description" placeholder="Description (optionnel)" onChange={e => setDescription(e.target.value)}></input>
-                <input className="input_form" type="text" name="amount" placeholder="Montant €" required onChange={e => setAmount(e.target.value)}></input>
-                <input className="input_form" type="date" name="date" required onChange={e => setDate(e.target.value)}></input>
-                <button type="submit" className="">Valider</button>
-            </form>
+            <SpentForm
+                categories={categories}
+                onSubmit={handleSpentSubmit}
+                submitLabel="Valider"
+            />
             <Table 
                 data = {data}
                 onDelete = {handleDelete}

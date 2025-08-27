@@ -1,4 +1,5 @@
 import { IoTrash } from "react-icons/io5";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
 import { useState } from "react"
 
 const Table = ({ data, onDelete }) => {
@@ -25,9 +26,14 @@ const Table = ({ data, onDelete }) => {
                             <td className="p-2 border">{spent.date}</td>
                             <td className="p-2 border">{spent.description}</td>
                             <td className="p-2 border">
-                                <button onClick={() => onDelete(spent.id)}>
-                                    <IoTrash className="text-red-500 hover:text-red-600 cursor-pointer"/>
-                                </button>
+                                <div className="flex gap-2">
+                                    <button onClick={() => onDelete(spent.id)}>
+                                        <IoTrash className="text-red-500 hover:text-red-600 cursor-pointer"/>
+                                    </button>
+                                    <button onClick={() => onModify(spent.id)}>
+                                        <HiOutlinePencilSquare className="text-blue-500 hover:text-blue-600 cursor-pointer"/>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     ))}
