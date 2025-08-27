@@ -1,5 +1,5 @@
 import Table from "../components/Table";
-import { getSpents, postSpents } from "../api/spents";
+import { deleteSpent, getSpents, postSpents } from "../api/spents";
 import { getCategories } from "../api/categories";
 import { useState, useEffect } from "react"
 
@@ -39,7 +39,23 @@ const Saisis = () => {
         const spents = await getSpents(); // récupère la liste complète
         setData(spents);
     }
-    console.log(date)
+
+    const [ idToDelete, setIdToDelete ] = useState(null);
+    const [ showDeleteConfirm, setShowDeleteConfirm ] = useState(false);
+
+    const handleDelete = async (id) => {
+        setShowDeleteConfirm(true);
+        setIdToDelete(id)
+    }
+
+    const confirmDelete = async () => {
+        await deleteSpent(idToDelete);
+        const spents = await getSpents();
+        setData(spents);
+        setShowDeleteConfirm(false);
+        setIdToDelete(null)
+    }
+
     return (
         <div>
             <form onSubmit={handleSubmit}>
@@ -70,7 +86,17 @@ const Saisis = () => {
             </form>
             <Table 
                 data = {data}
+                onDelete = {handleDelete}
             />
+            {showDeleteConfirm && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                    <div className="bg-gray-200 p-4 rounded border-2 border-gray-400 shadow-lg">
+                        <p className="font-semibold text-xl">Confirmer la suppression ?</p>
+                        <button onClick={confirmDelete}>Oui</button>
+                        <button onClick={() => setShowDeleteConfirm(false)}>Non</button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 };
