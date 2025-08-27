@@ -72,45 +72,54 @@ const Saisis = () => {
                 />
             </div>
             <Table 
-                data = {data}
-                onDelete = {handleDelete}
-                onModify = {handleModifyClick}
+                data={data}
+                onDelete={handleDelete}
+                onModify={handleModifyClick}
+                idToModify={idToModify}
             />
 
             {showDeleteConfirm && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-                    <div className="bg-gray-200 p-4 rounded border-2 border-gray-400 shadow-lg">
+                    <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
                         <p className="font-semibold text-xl">Confirmer la suppression ?</p>
-                        <button onClick={confirmDelete}>Oui</button>
-                        <button onClick={() => setShowDeleteConfirm(false)}>Non</button>
+                        <div className="flex gap-4">
+                            <button onClick={confirmDelete} className="btn_form">Oui</button>
+                            <button onClick={() => setShowDeleteConfirm(false)} className="btn_form">Non</button>
+                        </div>
+
                     </div>
                 </div>
             )}
             {showModify && (
-                <SpentForm
-                    categories={categories}
-                    initialValues={(() => {
-                        const spent = data.find(spent => spent.id === idToModify);
-                        if (!spent) return {};
-                        let category_id = spent.category_id;
-                        let subCategory_id = "";
-                        const parentCat = categories.find(cat => cat.children?.some(sub => sub.id === category_id));
-                        if (parentCat) {
-                            subCategory_id = category_id;
-                            category_id = parentCat.id;
-                        }
-                        return {
-                            name: spent.name,
-                            amount: spent.amount,
-                            description: spent.description,
-                            date: spent.date,
-                            category_id,
-                            subCategory_id
-                        };
-                    })()}
-                    onSubmit={handleModify}
-                    submitLabel="Modifier"
-                />
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                    <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
+                        <SpentForm
+                            categories={categories}
+                            initialValues={(() => {
+                                const spent = data.find(spent => spent.id === idToModify);
+                                if (!spent) return {};
+                                let category_id = spent.category_id;
+                                let subCategory_id = "";
+                                const parentCat = categories.find(cat => cat.children?.some(sub => sub.id === category_id));
+                                if (parentCat) {
+                                    subCategory_id = category_id;
+                                    category_id = parentCat.id;
+                                }
+                                return {
+                                    name: spent.name,
+                                    amount: spent.amount,
+                                    description: spent.description,
+                                    date: spent.date,
+                                    category_id,
+                                    subCategory_id
+                                };
+                            })()}
+                            onSubmit={handleModify}
+                            submitLabel="Modifier"
+                            cancelButton={<button onClick={() => { setShowModify(false);  setIdToModify(""); }} type="button" className="btn_form">Annuler</button>}
+                        />
+                    </div>
+                </div>
             )}
         </div>
     )

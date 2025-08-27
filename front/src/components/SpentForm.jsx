@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Valider" }) => {
+const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Valider", cancelButton }) => {
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
   const [categorySelected, setCategorySelected] = useState(initialValues.category_id || "");
@@ -72,8 +72,9 @@ const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Va
       <input className="input_form col-span-1 md:col-span-2 w-full" type="text" name="description" placeholder="Description (optionnel)" value={description} onChange={e => setDescription(e.target.value)} />
       <input className="input_form" type="text" name="amount" placeholder="Montant €" required value={amount} onChange={e => setAmount(e.target.value)} />
       <input className="input_form" type="date" name="date" required value={date} onChange={e => setDate(e.target.value)} />
-      <div className="col-span-1 md:col-span-2 flex justify-center">
+      <div className="col-span-1 md:col-span-2 flex justify-center gap-4">
         <button className="btn_form" type="submit">{submitLabel}</button>
+        {typeof cancelButton !== 'undefined' && cancelButton}
       </div>
       {message && (
         <div className={`col-span-1 md:col-span-2 flex justify-center mt-2 transition-opacity duration-700 ${showMessage ? 'opacity-100' : 'opacity-0'}`}>
