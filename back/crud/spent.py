@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session, selectinload
+from sqlalchemy import func
 from models.spent import Spent
 from schemas.spent import SpentCreate, SpentUpdate
 from fastapi import HTTPException
@@ -76,3 +77,9 @@ def update_spent(spent_id: int, spent_data: SpentUpdate, db: Session):
         db.refresh(spent)
         return spent
     raise HTTPException(status_code=404, detail=f"La dépense {spent_id} n'existe pas.")
+
+def get_total_spent(year: int, db: Session):
+    total = (db.query(func.sum(Spent.amount)).filter(func.extract('year', Spent.date) == year).scalar())
+    print(total)
+    return total or 0.0
+

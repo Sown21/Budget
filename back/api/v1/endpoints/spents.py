@@ -39,3 +39,7 @@ def delete_spent(spent_id: int, db: Session = Depends(get_db)):
 @router.put("/{spent_id}")
 def update_spent(spent_id: int, spent_data: SpentUpdate, db: Session = Depends(get_db)):
     return crud_spent.update_spent(spent_id=spent_id, spent_data=spent_data, db=db)
+
+@router.get("/total")
+def get_total_spent(year: int, db: Session = Depends(get_db)):
+    return crud_spent.get_total_spent(year=year, db=db)
