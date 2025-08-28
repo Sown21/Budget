@@ -79,12 +79,12 @@ def update_spent(spent_id: int, spent_data: SpentUpdate, db: Session):
     raise HTTPException(status_code=404, detail=f"La dépense {spent_id} n'existe pas.")
 
 def get_total_spent(year: int, db: Session):
-    ids_to_exclude = db.query(Category.id).filter(or_(Category.id == 10, (Category.parent_id == 10))).subquery()
+    ids_to_exclude = db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10)).subquery()
     total = (db.query(func.sum(Spent.amount)).filter(func.extract('year', Spent.date) == year).filter(~Spent.category_id.in_(ids_to_exclude)).scalar())
-    print(total)
-    print(ids_to_exclude)
     return total or 0.0
 
 def get_total_income(year: int, db: Session):
-    pass
+    ids_to_keep = db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10)).subquery()
+    total = (db.query(func.sum(Spent.amount)).filter(func.extract('year', Spent.date) == year).filter(Spent.category_id.in_(ids_to_keep)).scalar())
+    return total or 0.0
 

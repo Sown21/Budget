@@ -40,10 +40,10 @@ def delete_spent(spent_id: int, db: Session = Depends(get_db)):
 def update_spent(spent_id: int, spent_data: SpentUpdate, db: Session = Depends(get_db)):
     return crud_spent.update_spent(spent_id=spent_id, spent_data=spent_data, db=db)
 
-@router.get("/total")
+@router.get("/total/")
 def get_total_spent(year: int, db: Session = Depends(get_db)):
     return crud_spent.get_total_spent(year=year, db=db)
 
-@router.get("total/income")
+@router.get("/total/income/")
 def get_total_income(year: int, db: Session = Depends(get_db)):
     return crud_spent.get_total_income(year=year, db=db)

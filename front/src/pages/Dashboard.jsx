@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react"
-import { totalSpent } from "../api/spents"
+import { totalSpent, totalIncome } from "../api/spents"
 
 const Dashboard = () => {
     const [ year, setYear ] = useState("")
     const [ yearTotalSpent, setYearTotalSpent ] = useState("")
+    const [ yearTotalIncome, setYearTotalInome ] = useState("")
 
     useEffect(() => {
         const getTotalSpent = async () => {
@@ -11,6 +12,12 @@ const Dashboard = () => {
         setYearTotalSpent(spents)
         }
         getTotalSpent()
+
+        const getTotalIncome = async () => {
+            let incomes = await totalIncome(2025)
+            setYearTotalInome(incomes)
+        }
+        getTotalIncome()
     }, [])
 
 
@@ -23,7 +30,7 @@ const Dashboard = () => {
                 </div>
                 <div className="budget_card">
                     <h2>Revenue total :</h2>
-                    <p className="font-semibold">€</p>
+                    <p className="font-semibold">{yearTotalIncome}€</p>
                 </div>
             </div>
         </div>
