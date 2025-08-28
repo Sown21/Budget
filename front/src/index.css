@@ -34,6 +34,10 @@
   position: relative;
 }
 
+.budget_card {
+  @apply border p-2
+}
+
 
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

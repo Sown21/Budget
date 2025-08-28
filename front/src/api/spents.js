@@ -19,3 +19,8 @@ export const modifySpent = async (id, payload) => {
     const response = await instance.put(`/spents/${id}`, payload)
     return response.data
 }
+
+export const totalSpent = async (year) => {
+    const response = await instance.get(`/spents/total/?year=${year}`)
+    return response.data
+}
