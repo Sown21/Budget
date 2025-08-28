@@ -7,9 +7,15 @@ const Header = () => {
                 <a className="">
                     <FaMoneyBillTrendUp />
                 </a>
-                <a className="cursor-pointer text-blue-500 font-semibold hover:scale-105" href="/dashboard">
-                    <span>Dashboard</span>
-                </a>
+                <div className="flex gap-6">
+                    <a className="cursor-pointer text-blue-500 font-semibold hover:scale-105" href="/saisis">
+                        <span>Saisies</span>
+                    </a>
+                    <a className="cursor-pointer text-blue-500 font-semibold hover:scale-105" href="/dashboard">
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+
             </div>
         </header>
     )
