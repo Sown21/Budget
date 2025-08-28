@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import Saisis from "./pages/Saisis"
 import Header from './components/Header'
 import Dashboard from "./pages/Dashboard"
@@ -10,6 +10,7 @@ function App() {
     <BrowserRouter>
       <Header />
       <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path ="/saisis" element={<Saisis />} />
         <Route path ="/dashboard" element={<Dashboard />} />
       </Routes>

@@ -1,0 +1,16 @@
+services:
+  frontend:
+    container_name: budget-front
+    build: ./front
+    ports:
+      - "3022:3022"
+    depends_on:
+      - backend
+    restart: always
+      
+  backend:
+    container_name: budget-back
+    build: ./back
+    ports: 
+      - "8022:8022"
+    restart: always

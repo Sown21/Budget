@@ -10,7 +10,7 @@ ENV/
 .venv/
 
 # SQLite DB
-back/data/database.db
+*.db
 
 # Config et variables d'environnement
 *.env
