@@ -13,4 +13,4 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE 3022
 
-CMD ["serve", "-s", "dist", "-l", "3022"]
+CMD ["serve", "-s", "dist", "-l", "tcp://0.0.0.0:3022"]
