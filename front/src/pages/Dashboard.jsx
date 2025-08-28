@@ -2,19 +2,19 @@ import { useState, useEffect } from "react"
 import { totalSpent, totalIncome } from "../api/spents"
 
 const Dashboard = () => {
-    const [ year, setYear ] = useState("")
+    const [ year, setYear ] = useState(new Date().getFullYear());
     const [ yearTotalSpent, setYearTotalSpent ] = useState("")
     const [ yearTotalIncome, setYearTotalInome ] = useState("")
 
     useEffect(() => {
         const getTotalSpent = async () => {
-        let spents = await totalSpent(2025)
+        let spents = await totalSpent(year)
         setYearTotalSpent(spents)
         }
         getTotalSpent()
 
         const getTotalIncome = async () => {
-            let incomes = await totalIncome(2025)
+            let incomes = await totalIncome(year)
             setYearTotalInome(incomes)
         }
         getTotalIncome()
