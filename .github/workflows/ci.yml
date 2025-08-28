@@ -44,13 +44,13 @@ jobs:
             docker build -t ghcr.io/sown21/budget/back:${GITHUB_SHA} ./back
           fi
 
-      - name: Build frontend image
+      - name: Build front image
         run: |
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             VERSION=${GITHUB_REF#refs/tags/v}
-            docker build -t ghcr.io/sown21/budget/frontend:$VERSION -t ghcr.io/sown21/budget/frontend:latest ./frontend
+            docker build -t ghcr.io/sown21/budget/front:$VERSION -t ghcr.io/sown21/budget/front:latest ./front
           else
-            docker build -t ghcr.io/sown21/budget/frontend:${GITHUB_SHA} ./frontend
+            docker build -t ghcr.io/sown21/budget/front:${GITHUB_SHA} ./front
           fi
 
       - name: Log in to GitHub Container Registry
@@ -66,12 +66,31 @@ jobs:
             docker push ghcr.io/sown21/budget/back:${GITHUB_SHA}
           fi
 
-      - name: Push frontend image
+      - name: Push front image
         run: |
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             VERSION=${GITHUB_REF#refs/tags/v}
-            docker push ghcr.io/sown21/budget/frontend:$VERSION
-            docker push ghcr.io/sown21/budget/frontend:latest
+            docker push ghcr.io/sown21/budget/front:$VERSION
+            docker push ghcr.io/sown21/budget/front:latest
           else
-            docker push ghcr.io/sown21/budget/frontend:${GITHUB_SHA}
+            docker push ghcr.io/sown21/budget/front:${GITHUB_SHA}
           fi
+
+      - name: Clone cluster repo
+        run: |
+          git clone https://Sown21:${{ secrets.CLUSTER_REPO_PAT }}@github.com/Sown21/cluster.git
+  
+      - name: Update manifests with new image
+        run: | 
+          cd cluster
+          sed -i "s|ghcr.io/sown21/budget/back:.*|ghcr.io/sown21/budget/back:${VERSION}|g" app/budget/budget-back.yaml
+          sed -i "s|ghcr.io/sown21/budget/front:.*|ghcr.io/sown21/budget/front:${VERSION}|g" app/budget/budget-front.yaml
+
+      - name: Commit and push updated manifests
+        run: |
+          cd cluster
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add app/budget/budget-back.yaml app/budget/budget-front.yaml
+          git commit -m "fix: update manifests with image tag ${VERSION}"
+          git push 
