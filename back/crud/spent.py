@@ -48,11 +48,15 @@ def get_spents(
     ]
 
 def create_spent(db: Session, spent: SpentCreate):
-    db_spent = Spent(**spent.model_dump())
-    db.add(db_spent)
-    db.commit()
-    db.refresh(db_spent)
-    return db_spent
+    existing_spents = db.query(Spent).filter(Spent.amount == spent.amount, Spent.name == spent.name, Spent.date == spent.date, Spent.category_id == spent.category_id).first()
+    if existing_spents:
+        raise HTTPException(status_code=409, detail="Cette dépense existe déjà !")
+    else:
+        db_spent = Spent(**spent.model_dump())
+        db.add(db_spent)
+        db.commit()
+        db.refresh(db_spent)
+        return db_spent
 
 def delete_spent(spent_id: int, db: Session):
     spent = db.query(Spent).filter(Spent.id == spent_id).first()

@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Valider", cancelButton }) => {
-  const [message, setMessage] = useState("");
-  const [showMessage, setShowMessage] = useState(false);
+const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Valider", cancelButton, error, success, showMessage }) => {
   const [categorySelected, setCategorySelected] = useState(initialValues.category_id || "");
   const [subCategorySelected, setSubCategorySelected] = useState(initialValues.subCategory_id || "");
   const [name, setName] = useState(initialValues.name || "");
@@ -10,10 +8,21 @@ const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Va
   const [amount, setAmount] = useState(initialValues.amount || "");
   const [date, setDate] = useState(initialValues.date || "");
 
+  useEffect(() => {
+    if (success && showMessage) {
+      setCategorySelected("");
+      setSubCategorySelected("");
+      setName("");
+      setDescription("");
+      setAmount("");
+      setDate("");
+    }
+  }, [success, showMessage]);
+
   const selectedCat = categories.find(cat => cat.id === Number(categorySelected));
   const subCategories = selectedCat?.children?.length ? selectedCat.children : [];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Si la catégorie sélectionnée a des sous-catégories et aucune n'est choisie, on envoie l'id du parent
     let catId;
@@ -24,27 +33,15 @@ const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Va
     } else {
       catId = Number(categorySelected);
     }
-    Promise.resolve(onSubmit({
-      name,
-      amount: Number(amount),
-      description,
-      category_id: catId,
-      date
-    })).then(() => {
-      setMessage("Ajout de la saisie réussi !");
-      setShowMessage(true);
-      setCategorySelected("");
-      setSubCategorySelected("");
-      setName("");
-      setDescription("");
-      setAmount("");
-      setDate("");
-      setTimeout(() => setShowMessage(false), 3000);
-    }).catch(() => {
-      setMessage("Erreur lors de l'ajout de la saisie !");
-      setShowMessage(true);
-      setTimeout(() => setShowMessage(false), 3000);
-    });
+    try {
+        await onSubmit({
+            name,
+            amount: Number(amount),
+            description,
+            category_id: catId,
+            date
+        });
+    } catch (err) {}
   };
 
   return (
@@ -76,11 +73,13 @@ const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Va
         <button className="btn_form" type="submit">{submitLabel}</button>
         {typeof cancelButton !== 'undefined' && cancelButton}
       </div>
-      {message && (
-        <div className={`col-span-1 md:col-span-2 flex justify-center mt-2 transition-opacity duration-700 ${showMessage ? 'opacity-100' : 'opacity-0'}`}>
-          <span className={message.includes("Erreur") ? "text-red-500" : "text-green-500"}>{message}</span>
-        </div>
-      )}
+      <div
+        className={`col-span-1 md:col-span-2 transition-opacity duration-700 flex justify-center mt-2 ${
+          showMessage ? "opacity-100" : "opacity-0"
+        }`}>
+        {error && <span className="text-red-500">{error}</span>}
+        {success && <span className="text-green-500">{success}</span>}
+      </div>
     </form>
   );
 };

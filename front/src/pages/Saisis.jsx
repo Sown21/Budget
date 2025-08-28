@@ -8,6 +8,11 @@ const Saisis = () => {
     const [ data, setData ] = useState([]);
     const [ categories, setCategories ] = useState([]);
 
+    // Ajout
+    const [errorAdd, setErrorAdd] = useState("");
+    const [successAdd, setSuccessAdd] = useState("");
+    const [showMessageAdd, setShowMessageAdd] = useState(false);
+
     useEffect(() => {
         const fetchData = async () => {
             const spents = await getSpents();
@@ -21,10 +26,30 @@ const Saisis = () => {
     }, []); // [] exéctué une seule fois au montage
 
     const handleSpentSubmit = async (payload) => {
-    await postSpents(payload);
-    const spents = await getSpents();
-    spents.sort((a, b) => new Date(b.date) - new Date(a.date));
-    setData(spents);
+        setErrorAdd("");
+        setSuccessAdd("");
+        setShowMessageAdd(false);
+        try {
+            await postSpents(payload);
+            const spents = await getSpents();
+            spents.sort((a, b) => new Date(b.date) - new Date(a.date));
+            setData(spents);
+            setSuccessAdd("Ajout de la saisie réussi !");
+            setShowMessageAdd(true);
+            setTimeout(() => {
+              setShowMessageAdd(false);
+              setErrorAdd("");
+              setSuccessAdd("");
+            }, 3000);
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.detail) {
+                setErrorAdd(error.response.data.detail);
+            } else {
+                setErrorAdd("Erreur lors de l'ajout de la saisie !");
+            }
+            setShowMessageAdd(true);
+            setTimeout(() => setShowMessageAdd(false), 3000);
+        };
     };
 
     const [ idToDelete, setIdToDelete ] = useState(null);
@@ -36,12 +61,12 @@ const Saisis = () => {
     }
 
     const confirmDelete = async () => {
-    await deleteSpent(idToDelete);
-    const spents = await getSpents();
-    spents.sort((a, b) => new Date(b.date) - new Date(a.date));
-    setData(spents);
-    setShowDeleteConfirm(false);
-    setIdToDelete(null)
+        await deleteSpent(idToDelete);
+        const spents = await getSpents();
+        spents.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setData(spents);
+        setShowDeleteConfirm(false);
+        setIdToDelete(null)
     }
 
     const [ showModify, setShowModify ] = useState(false);
@@ -53,22 +78,25 @@ const Saisis = () => {
     };
 
     const handleModify = async (payload) => {
-    await modifySpent(idToModify, payload);
-    const spents = await getSpents();
-    spents.sort((a, b) => new Date(b.date) - new Date(a.date));
-    setData(spents);
-    setShowModify(false);
-    setIdToModify("");
+        await modifySpent(idToModify, payload);
+        const spents = await getSpents();
+        spents.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setData(spents);
+        setShowModify(false);
+        setIdToModify("");
     };
 
     return (
         <div className="saisie_bg flex flex-col">
-            <div className="saisie_card">
+            <div className="saisie_card mt-10">
                 <h2 className="text-4xl font-extrabold text-center mb-12 text-blue-600">Saisie des dépenses</h2>
                 <SpentForm
                     categories={categories}
                     onSubmit={handleSpentSubmit}
                     submitLabel="Ajouter"
+                    error={errorAdd}
+                    success={successAdd}
+                    showMessage={showMessageAdd}
                 />
             </div>
             <Table 
