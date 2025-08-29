@@ -47,3 +47,10 @@ def get_total_spent(year: int, db: Session = Depends(get_db)):
 @router.get("/total/income/")
 def get_total_income(year: int, db: Session = Depends(get_db)):
     return crud_spent.get_total_income(year=year, db=db)
+
+@router.get("/total/remaining/")
+def get_total_remaining(year: int, db: Session = Depends(get_db)):
+    total_spent = crud_spent.get_total_spent(year=year, db=db)
+    total_income = crud_spent.get_total_income(year=year, db=db)
+    remaining = total_income - total_spent
+    return remaining
