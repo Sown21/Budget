@@ -12,9 +12,6 @@ print("Tables à créer:", list(Base.metadata.tables.keys()))
 # Créer les tables
 Base.metadata.create_all(bind=engine)
 
-# Créer les tables
-Base.metadata.create_all(bind=engine)
-
 create_defaut_categories()
 
 app = FastAPI(title=settings.app_name, version="1.0.0")
