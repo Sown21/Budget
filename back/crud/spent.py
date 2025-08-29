@@ -88,3 +88,6 @@ def get_total_income(year: int, db: Session):
     total = (db.query(func.sum(Spent.amount)).filter(func.extract('year', Spent.date) == year).filter(Spent.category_id.in_(ids_to_keep)).scalar())
     return total or 0.0
 
+def get_all_years(db: Session):
+    years = db.query(func.extract('year', Spent.date)).distinct().all()
+    return [int(y[0]) for y in years]

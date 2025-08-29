@@ -34,3 +34,8 @@ export const totalRemaining = async (year) => {
     const response = await instance.get(`/spents/total/remaining/?year=${year}`)
     return response.data
 }
+
+export const allYears = async () => {
+    const response = await instance.get("/spents/all/years/")
+    return response.data
+}

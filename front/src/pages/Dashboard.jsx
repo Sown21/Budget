@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react"
-import { totalSpent, totalIncome, totalRemaining } from "../api/spents"
+import { totalSpent, totalIncome, totalRemaining, allYears } from "../api/spents"
 
 const Dashboard = () => {
     const [ year, setYear ] = useState(new Date().getFullYear());
     const [ yearTotalSpent, setYearTotalSpent ] = useState("")
     const [ yearTotalIncome, setYearTotalIncome ] = useState("")
     const [ yearTotalRemaining, setYearTotalRemaining ] = useState("")
+    const [ years, setYears ] = useState([])
 
     useEffect(() => {
         const getTotalSpent = async () => {
@@ -25,11 +26,20 @@ const Dashboard = () => {
             setYearTotalRemaining(remaining)
         }
         getTotalRemaining()
-    }, [])
-
+        const getAllYears = async () => {
+            let years = await allYears()
+            setYears(years)
+        }
+        getAllYears()
+    }, [year])
 
     return (
         <div>
+            <select value={year} onChange={e => setYear(Number(e.target.value))}>
+                {years.map((y) => (
+                    <option key={y} value={y}>{y}</option>
+                ))}  
+            </select>
             <div className="flex gap-4">
                 <div className="budget_card">
                     <h2>Total dépensé :</h2>
