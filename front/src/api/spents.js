@@ -45,3 +45,10 @@ export const allYears = async () => {
     const response = await instance.get("/spents/all/years/")
     return response.data
 }
+
+export const totalByCategory = async (year, month) => {
+    let url = `/spents/total/by_category/?year=${year}`
+    if (month) url += `&month=${month}`
+    const response = await instance.get(url)
+    return response.data
+}

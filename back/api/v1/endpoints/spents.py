@@ -58,3 +58,7 @@ def get_total_remaining(year: int, month: Optional[int] = None, db: Session = De
 @router.get("/all/years/")
 def get_all_years(db: Session = Depends(get_db)):
     return crud_spent.get_all_years(db=db)
+
+@router.get("/total/by_category/")
+def get_total_by_category(year: int, month: Optional[int] = None, db: Session = Depends(get_db)):
+    return crud_spent.get_total_by_category(year=year, month=month, db=db)

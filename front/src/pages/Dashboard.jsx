@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { totalSpent, totalIncome, totalRemaining, allYears } from "../api/spents"
+import CategoryPieChart from "../components/PieChart";
 
 const Dashboard = () => {
     const [ year, setYear ] = useState(new Date().getFullYear());
@@ -75,6 +76,7 @@ const Dashboard = () => {
                     <p className="font-semibold">{yearTotalRemaining}€</p>
                 </div>
             </div>
+            <CategoryPieChart year={year} month={month} />
         </div>
     )
 }

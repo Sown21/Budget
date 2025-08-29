@@ -97,3 +97,14 @@ def get_total_income(year: int, db: Session, month: Optional[int] = None):
 def get_all_years(db: Session):
     years = db.query(func.extract('year', Spent.date)).distinct().all()
     return [int(y[0]) for y in years]
+
+def get_total_by_category(year: int, db: Session, month: Optional[int] = None):
+    results = (db.query(Category.name, func.sum(Spent.amount))
+                .join(Spent, Spent.category_id == Category.id)
+                .filter(func.extract('year', Spent.date) == year)
+                .filter(~Spent.category_id.in_(db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10))))
+               )
+    if month:
+        results = results.filter(func.extract('month', Spent.date) == month)
+    results = results.group_by(Category.name).all()
+    return [{"category": r[0], "total": r[1]} for r in results]
