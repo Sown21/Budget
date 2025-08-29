@@ -20,18 +20,24 @@ export const modifySpent = async (id, payload) => {
     return response.data
 }
 
-export const totalSpent = async (year) => {
-    const response = await instance.get(`/spents/total/?year=${year}`)
+export const totalSpent = async (year, month) => {
+    let url = `/spents/total/?year=${year}`
+    if (month) url += `&month=${month}`
+    const response = await instance.get(url)
     return response.data
 }
 
-export const totalIncome = async (year) => {
-    const response = await instance.get(`/spents/total/income/?year=${year}`)
+export const totalIncome = async (year, month) => {
+    let url = `/spents/total/income/?year=${year}`
+    if (month) url += `&month=${month}`
+    const response = await instance.get(url)
     return response.data
 }
 
-export const totalRemaining = async (year) => {
-    const response = await instance.get(`/spents/total/remaining/?year=${year}`)
+export const totalRemaining = async (year, month) => {
+    let url = `/spents/total/remaining/?year=${year}`
+    if (month) url += `&month=${month}`
+    const response = await instance.get(url)
     return response.data
 }
 
