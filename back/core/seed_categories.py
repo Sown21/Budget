@@ -38,6 +38,7 @@ def create_defaut_categories():
             Category(name="Essence", parent_id=2),
             Category(name="Parking", parent_id=2),
             Category(name="Entretien du véhicule", parent_id=2),
+            Category(name="Assurance voiture", parent_id=2),
 
             Category(name="Crédit Appartement", parent_id=3),
             Category(name="Travaux", parent_id=3),
@@ -50,11 +51,13 @@ def create_defaut_categories():
             Category(name="Pharmacie", parent_id=5),
             Category(name="Dentiste", parent_id=5),
             Category(name="Opticien", parent_id=5),
+            Category(name="Assurance santé", parent_id=5),
 
             Category(name="Electricité", parent_id=9),
             Category(name="Eau", parent_id=9),
             Category(name="Internet", parent_id=9),
             Category(name="Mobile", parent_id=9),
+            Category(name="Crédit conso", parent_id=9),
 
             Category(name="Salaire Neofacto", parent_id=10),
             Category(name="Pension Armée", parent_id=10),  
