@@ -18,8 +18,10 @@ def create_defaut_categories():
             Category(id=7, name="Epargne", parent_id=None),
             Category(id=8, name="Investissement", parent_id=None),
             Category(id=9, name="Factures", parent_id=None),
-            Category(id=10, name="Revenue", parent_id=None),
-            Category(id=11, name="Autres", parent_id=None)
+            Category(id=10, name="Revenu", parent_id=None),
+            Category(id=11, name="Animaux", parent_id=None),
+            Category(id=12, name="A prévoir"),
+            Category(id=13, name="Autres", parent_id=None),
         ]
 
         for category in default_categories:
@@ -56,6 +58,11 @@ def create_defaut_categories():
 
             Category(name="Salaire Neofacto", parent_id=10),
             Category(name="Pension Armée", parent_id=10),  
+            Category(name="Pôle Emploi Boulette", parent_id=10),
+            Category(name="Spacestylist", parent_id=10),
+
+            Category(name="Lapin", parent_id=11),
+            Category(name="Chat", parent_id=11),
         ]
 
         for sub_category in sub_categories:
