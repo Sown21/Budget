@@ -83,8 +83,8 @@ jobs:
       - name: Update manifests with new image
         run: | 
           cd cluster
-          sed -i "s|ghcr.io/sown21/budget/back:.*|ghcr.io/sown21/budget/back:${VERSION}|g" app/budget/budget-back.yaml
-          sed -i "s|ghcr.io/sown21/budget/front:.*|ghcr.io/sown21/budget/front:${VERSION}|g" app/budget/budget-front.yaml
+          sed -i "s|ghcr.io/sown21/budget/back:.*|ghcr.io/sown21/budget/back:${{ steps.extract_version.outputs.VERSION }}|g" app/budget/budget-back.yaml
+          sed -i "s|ghcr.io/sown21/budget/front:.*|ghcr.io/sown21/budget/front:${{ steps.extract_version.outputs.VERSION }}|g" app/budget/budget-front.yaml
 
       - name: Commit and push updated manifests
         run: |
@@ -93,4 +93,4 @@ jobs:
           git config user.email "github-actions@github.com"
           git add app/budget/budget-back.yaml app/budget/budget-front.yaml
           git commit -m "fix: update manifests with image tag ${VERSION}"
-          git push 
+          git push
