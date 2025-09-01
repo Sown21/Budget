@@ -25,6 +25,10 @@ jobs:
             sleep 2
           done
 
+      - name: Get back logs
+        run: |
+          docker compose logs backend
+
       - name: Test GET /categories/total
         run: |
           curl -sSf http://localhost:8022/api/v1/categories/total | tee result.json
