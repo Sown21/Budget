@@ -50,8 +50,13 @@ const Dashboard = () => {
         getAllYears()
 
         const getTotalRemainingByMonth = async () => {
-            let remaining = await totalRemainingByMonth(year, month);
-            setYearTotalRemainingByMonth(remaining)
+            if (month !== "") {
+                let remaining = await totalRemainingByMonth(year, month);
+                setYearTotalRemainingByMonth(remaining)
+            } else {
+                setYearTotalRemainingByMonth(null)
+            }
+
         }
         getTotalRemainingByMonth()
     }, [year, month])
