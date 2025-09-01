@@ -71,24 +71,23 @@ const Dashboard = () => {
             </select>
             <div className="flex gap-4">
                 <div className="budget_card">
-                    <h2>Total dépensé :</h2>
-                    <p className="font-semibold">{yearTotalSpent} €</p>
-                </div>
-                <div className="budget_card">
                     <h2>Revenue total :</h2>
                     <p className="font-semibold">{yearTotalIncome}€</p>
                 </div>
                 <div className="budget_card">
+                    <h2>Total dépensé :</h2>
+                    <p className="font-semibold">{yearTotalSpent} €</p>
+                </div>
+                    {month && (
+                    <div className="budget_card">
+                        <h2>Restant pour le mois :</h2>
+                        <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
+                    </div>
+                    )}
+                <div className="budget_card">
                     <h2>Capital restant :</h2>
                     <p className="font-semibold">{yearTotalRemaining}€</p>
                 </div>
-                {month && (
-                    <div className="budget_card">
-                        <h2>Restant pour le mois en cours :</h2>
-                        <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
-                    </div>
-                )
-                }
             </div>
             <CategoryPieChart year={year} month={month} />
         </div>
