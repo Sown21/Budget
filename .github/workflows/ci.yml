@@ -50,7 +50,7 @@ jobs:
 
       - name: Create .env file for frontend
         run: |
-          echo "VITE_API_URL=http://192.168.2.100:8022/api/v1" > ./front/.env
+          echo "VITE_API_URL=http://192.168.2.100:32023/api/v1" > ./front/.env
 
       - name: Build front image
         run: |
