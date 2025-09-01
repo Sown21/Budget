@@ -63,38 +63,49 @@ const Dashboard = () => {
 
     return (
         <div>
-            <select value={year} onChange={e => setYear(Number(e.target.value))}>
-                {years.map((y) => (
-                    <option key={y} value={y}>{y}</option>
-                ))}  
-            </select>
-            <select value={month === null ? "" : month} onChange={e => setMonth(e.target.value === "" ? "" : Number(e.target.value))}>
-                <option value="">Année entière</option>
-                {months.map((m) => (
-                    <option key={m.value} value={m.value}>{m.label}</option>
-                ))}  
-            </select>
-            <div className="flex gap-4">
-                <div className="budget_card">
-                    <h2>Revenue total :</h2>
-                    <p className="font-semibold">{yearTotalIncome}€</p>
+            <div className="flex flex-col gap-4 dashboard_banner shadow_blue">
+                <div className="flex gap-4 mx-10">
+                    <select className="banner_selector" value={year} onChange={e => setYear(Number(e.target.value))}>
+                        {years.map((y) => (
+                            <option key={y} value={y}>{y}</option>
+                        ))}  
+                    </select>
+                <select className="banner_selector" value={month === null ? "" : month} onChange={e => setMonth(e.target.value === "" ? "" : Number(e.target.value))}>
+                    <option value="">Année entière</option>
+                    {months.map((m) => (
+                        <option key={m.value} value={m.value}>{m.label}</option>
+                    ))}  
+                </select>
                 </div>
-                <div className="budget_card">
-                    <h2>Total dépensé :</h2>
-                    <p className="font-semibold">{yearTotalSpent} €</p>
-                </div>
-                    {month && (
+                <div className="flex gap-8 mx-10 mt-6">
                     <div className="budget_card">
-                        <h2>Restant pour le mois :</h2>
-                        <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
+                        <h2>Revenue total :</h2>
+                        <p className="font-semibold">{yearTotalIncome}€</p>
                     </div>
-                    )}
-                <div className="budget_card">
-                    <h2>Capital restant :</h2>
-                    <p className="font-semibold">{yearTotalRemaining}€</p>
+                    <div className="budget_card">
+                        <h2>Total dépensé :</h2>
+                        <p className="font-semibold">{yearTotalSpent} €</p>
+                    </div>
+                        {month && (
+                        <div className="budget_card">
+                            <h2>Restant pour le mois :</h2>
+                            <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
+                        </div>
+                        )}
+                    <div className="budget_card">
+                        <h2>Capital restant :</h2>
+                        <p className="font-semibold">{yearTotalRemaining}€</p>
+                    </div>
                 </div>
             </div>
-            <CategoryPieChart year={year} month={month} />
+            <div className="flex justify-end mt-8 mx-8 gap-8">
+                <div className="scatter_chart shadow_blue">
+
+                </div>
+                <div className="pie_chart shadow_blue">
+                    <CategoryPieChart year={year} month={month} />
+                </div>
+            </div>     
         </div>
     )
 }

@@ -35,9 +35,24 @@
 }
 
 .budget_card {
-  @apply border p-2
+  @apply border border-blue-300 bg-blue-200 p-4 rounded-2xl text-xl shadow-xl
 }
 
+.dashboard_banner {
+  @apply bg-blue-50 py-10 my-10 mx-8 border border-blue-200 rounded
+}
+
+.banner_selector {
+  @apply border border-blue-200 rounded p-1 bg-blue-300 shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400
+}
+
+.pie_chart {
+  @apply border border-blue-200 rounded bg-blue-50 w-fit p-6
+}
+
+.scatter_chart {
+  @apply border border-blue-200 rounded bg-blue-50 w-full p-6
+}
 
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
