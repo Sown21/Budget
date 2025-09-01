@@ -15,6 +15,14 @@ jobs:
       - name: Checkout-code
         uses: actions/checkout@v4
 
+      - name: Create .env file for backend
+        run: |
+          echo "CORS_ALLOW_ORIGIN=http://localhost:3022" > ./back/.env
+
+      - name: Create .env file for frontend
+        run: |
+          echo "VITE_API_URL=http://localhost:8022/api/v1" > ./front/.env
+
       - name: Build and start docker compose
         run: docker compose up -d --build
 
