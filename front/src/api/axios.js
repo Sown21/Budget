@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const apiURL = import.meta.env.VITE_API_URL;
+
 const instance = axios.create({
-    baseURL: "http://192.168.2.100:32023/api/v1",
+    baseURL: apiURL,
     timeout: 5000,
     headers: {
         "Content-Type": "application/json",

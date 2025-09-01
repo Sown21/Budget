@@ -35,6 +35,10 @@ jobs:
         id: extract_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
+      - name: Create .env file for backend
+        run: |
+          echo "CORS_ALLOW_ORIGIN=http://192.168.2.100:32022" > ./back/.env
+
       - name: Build back image
         run: |
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
@@ -43,6 +47,10 @@ jobs:
           else
             docker build -t ghcr.io/sown21/budget/back:${GITHUB_SHA} ./back
           fi
+
+      - name: Create .env file for frontend
+        run: |
+          echo "VITE_API_URL=http://192.168.2.100:8022/api/v1" > ./front/.env
 
       - name: Build front image
         run: |

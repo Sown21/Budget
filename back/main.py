@@ -5,6 +5,7 @@ from api.v1.api import api_router
 from models.spent import Spent
 from core.seed_categories import create_defaut_categories
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 # Avant Base.metadata.create_all(bind=engine)
 print("Tables à créer:", list(Base.metadata.tables.keys()))
@@ -18,7 +19,7 @@ app = FastAPI(title=settings.app_name, version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://192.168.2.100:32022"],
+    allow_origins=[settings.cors_allow_origin],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
