@@ -41,6 +41,12 @@ export const totalRemaining = async (year, month) => {
     return response.data
 }
 
+export const totalRemainingByMonth = async (year, month) => {
+    let url = `/spents/total/remaining/month/?year=${year}&month=${month}`
+    const response = await instance.get(url)
+    return response.data
+}
+
 export const allYears = async () => {
     const response = await instance.get("/spents/all/years/")
     return response.data

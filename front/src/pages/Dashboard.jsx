@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { totalSpent, totalIncome, totalRemaining, allYears } from "../api/spents"
+import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth } from "../api/spents"
 import CategoryPieChart from "../components/PieChart";
 
 const Dashboard = () => {
@@ -7,6 +7,7 @@ const Dashboard = () => {
     const [ yearTotalSpent, setYearTotalSpent ] = useState("")
     const [ yearTotalIncome, setYearTotalIncome ] = useState("")
     const [ yearTotalRemaining, setYearTotalRemaining ] = useState("")
+    const [ yearTotalRemainingByMonth, setYearTotalRemainingByMonth ] = useState("")
     const [ years, setYears ] = useState([])
     const [ month, setMonth ] = useState("")
     const months = [
@@ -47,6 +48,12 @@ const Dashboard = () => {
             setYears(years)
         }
         getAllYears()
+
+        const getTotalRemainingByMonth = async () => {
+            let remaining = await totalRemainingByMonth(year, month);
+            setYearTotalRemainingByMonth(remaining)
+        }
+        getTotalRemainingByMonth()
     }, [year, month])
 
     return (
@@ -75,6 +82,13 @@ const Dashboard = () => {
                     <h2>Capital restant :</h2>
                     <p className="font-semibold">{yearTotalRemaining}€</p>
                 </div>
+                {month && (
+                    <div className="budget_card">
+                        <h2>Restant pour le mois en cours :</h2>
+                        <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
+                    </div>
+                )
+                }
             </div>
             <CategoryPieChart year={year} month={month} />
         </div>
