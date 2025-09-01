@@ -114,5 +114,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add app/budget/budget-back.yaml app/budget/budget-front.yaml
-          git commit -m "ci: update budget manifests with image tag ${VERSION}"
+          git commit -m "ci: update budget manifests with image tag ${{ steps.extract_version.outputs.VERSION }}"
           git push
