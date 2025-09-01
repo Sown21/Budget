@@ -54,6 +54,10 @@
   @apply border border-blue-200 rounded bg-blue-50 w-full p-6
 }
 
+:root {
+  background-color: #F9FAFB
+}
+
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
