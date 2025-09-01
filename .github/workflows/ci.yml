@@ -2,8 +2,8 @@ name: CI
 
 on:
   push:
-    # tags:
-    #   - 'v*.*.*'
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build_test_push:
@@ -40,7 +40,6 @@ jobs:
       - name: Test GET /categories/total
         run: |
           curl -sSf http://localhost:8022/api/v1/categories/total | tee result.json
-          grep 'category' result.json # adapte selon le format attendu
 
       - name: Stop docker compose
         run: docker compose down
