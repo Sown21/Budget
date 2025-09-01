@@ -25,6 +25,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+print("CORS_ALLOW_ORIGIN : ", settings.cors_allow_origin)
+
 # Inclure les routes
 app.include_router(api_router, prefix="/api/v1")
 
