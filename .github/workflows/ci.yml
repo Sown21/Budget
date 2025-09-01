@@ -21,14 +21,23 @@ jobs:
       #     sudo apt-get update
       #     sudo apt-get install -y docker-compose
 
-      # - name: Build and start docker compose
-      #   run: docker compose up -d --build
+      - name: Build and start docker compose
+        run: docker compose up -d --build
 
-      # - name: Run tests
-      #   run: echo "No tests yet"
+      - name: Wait for API to be ready
+        run: |
+          for i in {1..20}; do
+            curl -sf http://192.168.2.100:32023/api/v1/categories/total && break
+            sleep 2
+          done
 
-      # - name: Stop docker compose
-      #   run: docker compose down
+      - name: Test GET /categories/total
+        run: |
+          curl -sSf http://192.168.2.100:32023/api/v1/categories/total | tee result.json
+          grep 'category' result.json # adapte selon le format attendu
+
+      - name: Stop docker compose
+        run: docker compose down
 
       - name: Extract version from tag
         if: startsWith(github.ref, 'refs/tags/v')
