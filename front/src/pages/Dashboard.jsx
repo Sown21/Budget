@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth } from "../api/spents"
 import CategoryPieChart from "../components/PieChart";
+import { LuPiggyBank } from "react-icons/lu";
 
 const Dashboard = () => {
     const [ year, setYear ] = useState(new Date().getFullYear());
@@ -79,21 +80,26 @@ const Dashboard = () => {
                 </div>
                 <div className="flex gap-8 mx-10 mt-6">
                     <div className="budget_card">
-                        <h2>Revenue total :</h2>
+                        <h2>Revenue total</h2>
                         <p className="font-semibold">{yearTotalIncome}€</p>
                     </div>
                     <div className="budget_card">
-                        <h2>Total dépensé :</h2>
+                        <h2>Total dépensé</h2>
                         <p className="font-semibold">{yearTotalSpent} €</p>
                     </div>
                         {month && (
                         <div className="budget_card">
-                            <h2>Restant pour le mois :</h2>
+                            <h2>Restant pour le mois</h2>
                             <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
                         </div>
                         )}
-                    <div className="budget_card">
-                        <h2>Capital restant :</h2>
+                    <div className="budget_card border-orange-100 bg-orange-100">
+                        <div className="flex gap-8">
+                            <h2>Capital restant</h2>
+                            <div className="border border-orange-200 rounded-lg bg-orange-500 p-1.5">
+                                <LuPiggyBank className="text-2xl text-white" />
+                            </div>
+                        </div>
                         <p className="font-semibold">{yearTotalRemaining}€</p>
                     </div>
                 </div>

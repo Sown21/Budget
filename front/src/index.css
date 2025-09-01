@@ -35,23 +35,23 @@
 }
 
 .budget_card {
-  @apply border border-blue-300 bg-blue-200 p-4 rounded-2xl text-xl shadow-xl
+  @apply border p-4 rounded-2xl text-xl shadow-xl
 }
 
 .dashboard_banner {
-  @apply bg-blue-50 py-10 my-10 mx-8 border border-blue-200 rounded
+  @apply bg-white py-10 my-10 mx-8 border border-gray-200 rounded shadow-lg
 }
 
 .banner_selector {
-  @apply border border-blue-200 rounded p-1 bg-blue-300 shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400
+  @apply border border-gray-200 rounded p-1 bg-gray-200 shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400
 }
 
 .pie_chart {
-  @apply border border-blue-200 rounded bg-blue-50 w-fit p-6
+  @apply border border-gray-200 rounded bg-white w-fit p-6 shadow-lg
 }
 
 .scatter_chart {
-  @apply border border-blue-200 rounded bg-blue-50 w-full p-6
+  @apply border border-gray-200 rounded bg-white w-full p-6 shadow-lg
 }
 
 :root {
