@@ -5,7 +5,9 @@ from api.v1.api import api_router
 from models.spent import Spent
 from core.seed_categories import create_defaut_categories
 from fastapi.middleware.cors import CORSMiddleware
-import os
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 # Avant Base.metadata.create_all(bind=engine)
 print("Tables à créer:", list(Base.metadata.tables.keys()))
@@ -25,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-print("CORS_ALLOW_ORIGIN : ", settings.cors_allow_origin)
+logging.info(f"CORS_ALLOW_ORIGIN : {settings.cors_allow_origin}")
 
 # Inclure les routes
 app.include_router(api_router, prefix="/api/v1")
