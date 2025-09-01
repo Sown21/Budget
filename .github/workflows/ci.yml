@@ -15,25 +15,37 @@ jobs:
       - name: Checkout-code
         uses: actions/checkout@v4
 
-      # Optionnel : installer docker-compose si besoin
-      # - name: Install docker compose
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y docker-compose
+      - name: Build back image
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+            docker build -t ghcr.io/sown21/budget/back:$VERSION -t ghcr.io/sown21/budget/back:latest ./back
+          else
+            docker build -t ghcr.io/sown21/budget/back:${GITHUB_SHA} ./back
+          fi
 
-      - name: Build and start docker compose
-        run: docker compose up -d --build
+      - name: Build front image
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+            docker build -t ghcr.io/sown21/budget/front:$VERSION -t ghcr.io/sown21/budget/front:latest ./front
+          else
+            docker build -t ghcr.io/sown21/budget/front:${GITHUB_SHA} ./front
+          fi
+
+      - name: Start docker compose (test)
+        run: docker compose up -d
 
       - name: Wait for API to be ready
         run: |
-          for i in {1..20}; do
-            curl -sf http://192.168.2.100:32023/api/v1/categories/total && break
+          for i in {1..5}; do
+            curl -sf http://localhost:8022/api/v1/categories/total && break
             sleep 2
           done
 
       - name: Test GET /categories/total
         run: |
-          curl -sSf http://192.168.2.100:32023/api/v1/categories/total | tee result.json
+          curl -sSf http://localhost:8022/api/v1/categories/total | tee result.json
           grep 'category' result.json # adapte selon le format attendu
 
       - name: Stop docker compose
