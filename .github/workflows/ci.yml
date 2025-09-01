@@ -2,8 +2,8 @@ name: CI
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    # tags:
+    #   - 'v*.*.*'
 
 jobs:
   build_test_push:
@@ -15,30 +15,12 @@ jobs:
       - name: Checkout-code
         uses: actions/checkout@v4
 
-      - name: Build back image
-        run: |
-          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/v}
-            docker build -t ghcr.io/sown21/budget/back:$VERSION -t ghcr.io/sown21/budget/back:latest ./back
-          else
-            docker build -t ghcr.io/sown21/budget/back:${GITHUB_SHA} ./back
-          fi
-
-      - name: Build front image
-        run: |
-          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/v}
-            docker build -t ghcr.io/sown21/budget/front:$VERSION -t ghcr.io/sown21/budget/front:latest ./front
-          else
-            docker build -t ghcr.io/sown21/budget/front:${GITHUB_SHA} ./front
-          fi
-
-      - name: Start docker compose (test)
-        run: docker compose up -d
+      - name: Build and start docker compose
+        run: docker compose up -d --build
 
       - name: Wait for API to be ready
         run: |
-          for i in {1..5}; do
+          for i in {1..20}; do
             curl -sf http://localhost:8022/api/v1/categories/total && break
             sleep 2
           done
