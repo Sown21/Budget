@@ -35,7 +35,7 @@
 }
 
 .budget_card {
-  @apply border p-4 rounded-2xl text-xl shadow-xl
+  @apply border p-4 rounded-2xl text-xl shadow-xl hover:scale-105 hover:shadow-lg transition-all duration-200
 }
 
 .dashboard_banner {
