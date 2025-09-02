@@ -54,6 +54,10 @@
   @apply border border-gray-200 rounded bg-white w-full p-6 shadow-lg
 }
 
+.sidebar-link {
+  @apply block px-3 py-2 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all;
+}
+
 :root {
   background-color: #F9FAFB
 }
