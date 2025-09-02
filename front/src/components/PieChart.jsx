@@ -25,6 +25,7 @@ const CategoryPieChart = ({ year, month }) => {
                 cy="50%"
                 outerRadius={100}
                 innerRadius={60}
+                stroke="none"
                 label={({value}) => `${value} €`}
             >
                 {data.map((entry, index) => (

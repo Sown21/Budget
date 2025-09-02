@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import Saisis from "./pages/Saisis"
-import Header from './components/Header'
 import Dashboard from "./pages/Dashboard"
 import SideBar from './components/SideBar'
 

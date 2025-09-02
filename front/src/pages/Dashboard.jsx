@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth } from "../api/spents"
 import CategoryPieChart from "../components/PieChart";
 import { LuPiggyBank } from "react-icons/lu";
+import { TbMoneybag } from "react-icons/tb";
+import { GiPayMoney, GiMoneyStack } from "react-icons/gi";
 
 const Dashboard = () => {
     const [ year, setYear ] = useState(new Date().getFullYear());
@@ -79,17 +81,32 @@ const Dashboard = () => {
                 </select>
                 </div>
                 <div className="flex gap-8 mx-10 mt-6">
-                    <div className="budget_card">
-                        <h2>Revenue total</h2>
+                    <div className="budget_card border-yellow-100 bg-yellow-100">
+                        <div className="flex gap-8">
+                            <h2>Revenue total</h2>
+                            <div className="border border-yellow-200 rounded-lg bg-yellow-500 p-1.5">
+                                <TbMoneybag className="text-2xl text-white" />
+                            </div>
+                        </div>
                         <p className="font-semibold">{yearTotalIncome}€</p>
                     </div>
-                    <div className="budget_card">
-                        <h2>Total dépensé</h2>
+                    <div className="budget_card border-purple-100 bg-purple-100">
+                        <div className="flex gap-8">
+                            <h2>Total dépensé</h2>
+                            <div className="border border-purple-200 rounded-lg bg-purple-500 p-1.5">
+                                <GiPayMoney className="text-2xl text-white" />
+                            </div>
+                        </div>
                         <p className="font-semibold">{yearTotalSpent} €</p>
                     </div>
                         {month && (
-                        <div className="budget_card">
-                            <h2>Restant pour le mois</h2>
+                        <div className="budget_card border-blue-100 bg-blue-100">
+                            <div className="flex gap-8">
+                                <h2>Restant pour le mois</h2>
+                                <div className="border border-blue-200 rounded-lg bg-blue-500 p-1.5">
+                                    <GiMoneyStack className="text-2xl text-white" />
+                                </div>
+                            </div>
                             <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
                         </div>
                         )}
