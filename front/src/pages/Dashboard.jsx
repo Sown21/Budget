@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react"
-import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth } from "../api/spents"
+import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent } from "../api/spents"
 import CategoryPieChart from "../components/PieChart";
 import { LuPiggyBank } from "react-icons/lu";
 import { TbMoneybag } from "react-icons/tb";
 import { GiPayMoney, GiMoneyStack } from "react-icons/gi";
+import CustomLineChart from "../components/LineChart";
 
 const Dashboard = () => {
     const [ year, setYear ] = useState(new Date().getFullYear());
@@ -13,6 +14,8 @@ const Dashboard = () => {
     const [ yearTotalRemainingByMonth, setYearTotalRemainingByMonth ] = useState("")
     const [ years, setYears ] = useState([])
     const [ month, setMonth ] = useState("")
+    const [ currentYearIncome, setCurrentYearIncome ] = useState([])
+    const [ currentYearSpent, setCurrentYearSpent ] = useState([])
     const months = [
         { value: 1, label: "Janvier" },
         { value: 2, label: "Février" },
@@ -62,8 +65,20 @@ const Dashboard = () => {
 
         }
         getTotalRemainingByMonth()
-    }, [year, month])
 
+        const getYearIncome = async () => {
+            let data = await yearIncome(year)
+            setCurrentYearIncome(data)
+        }
+        getYearIncome()
+
+        const getYearSpent = async () => {
+            let data = await yearSpent(year)
+            setCurrentYearSpent(data)
+        }
+        getYearSpent()
+    }, [year, month])
+    
     return (
         <div>
             <div className="flex flex-col gap-4 dashboard_banner shadow_blue">
@@ -123,7 +138,7 @@ const Dashboard = () => {
             </div>
             <div className="flex justify-end mt-8 mx-8 gap-8">
                 <div className="scatter_chart shadow_blue">
-
+                    <CustomLineChart data_income={currentYearIncome ? currentYearIncome : []} data_spent={currentYearSpent ? currentYearSpent : []} />
                 </div>
                 <div className="pie_chart shadow_blue">
                     <CategoryPieChart year={year} month={month} />

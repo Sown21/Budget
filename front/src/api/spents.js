@@ -58,3 +58,13 @@ export const totalByCategory = async (year, month) => {
     const response = await instance.get(url)
     return response.data
 }
+
+export const yearIncome = async (year) => {
+    const response = await instance.get(`/spents/year/income/?year=${year}`)
+    return response.data
+}
+
+export const yearSpent = async (year) => {
+    const response = await instance.get (`/spents/year/spent/?year=${year}`)
+    return response.data
+}

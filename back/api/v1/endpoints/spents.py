@@ -66,3 +66,11 @@ def get_all_years(db: Session = Depends(get_db)):
 @router.get("/total/by_category/")
 def get_total_by_category(year: int, month: Optional[int] = None, db: Session = Depends(get_db)):
     return crud_spent.get_total_by_category(year=year, month=month, db=db)
+
+@router.get("/year/income/")
+def get_year_income(year: int, month: Optional[int] = None, db: Session = Depends(get_db)):
+    return crud_spent.get_year_income(year=year, month=month, db=db)
+
+@router.get("/year/spent/")
+def get_year_spent(year: int, month: Optional[int] = None, db: Session = Depends(get_db)):
+    return crud_spent.get_year_spent(year=year, month=month, db=db)

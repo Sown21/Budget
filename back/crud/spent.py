@@ -10,14 +10,14 @@ def get_spent(db: Session, spent_id: int):
     return db.query(Spent).filter(Spent.id == spent_id).first()
 
 def get_spents(
-        db: Session,
-        category_id: Optional[int] = None,
-        date_min: Optional[date] = None,
-        date_max: Optional[date] = None,
-        amount_min: Optional[float] = None,
-        amount_max: Optional[float] = None,
-        search: Optional[str] = None
-        ) -> List[dict]:
+    db: Session,
+    category_id: Optional[int] = None,
+    date_min: Optional[date] = None,
+    date_max: Optional[date] = None,
+    amount_min: Optional[float] = None,
+    amount_max: Optional[float] = None,
+    search: Optional[str] = None,
+    ) -> List[dict]:
 
     query = db.query(Spent).options(selectinload(Spent.category))
 
@@ -116,3 +116,20 @@ def get_total_by_category(year: int, db: Session, month: Optional[int] = None):
         results = results.filter(func.extract('month', Spent.date) == month)
     results = results.group_by(Category.name).all()
     return [{"category": r[0], "total": r[1]} for r in results]
+
+def get_year_income(year: int, db: Session, month: Optional[int] = None):
+    ids_to_keep = db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10)).subquery()
+    query = db.query(Spent).filter(func.extract('year', Spent.date) == year)
+    # if month:
+    #     query = query.filter(func.extract('month', Spent.date) == month)
+    data = query.filter(Spent.category_id.in_(ids_to_keep)).all()
+    return data
+
+def get_year_spent(year: int, db: Session, month: Optional[int] = None):
+    ids_to_exclude = db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10)).subquery()
+    # query = db.query(func.sum(Spent.amount)).filter(func.extract('year', Spent.date) == year)
+    query = db.query(Spent).filter(func.extract('year', Spent.date) == year)
+    # if month:
+    #     query = query.filter(func.extract('month', Spent.date) == month)
+    data = query.filter(~Spent.category_id.in_(ids_to_exclude)).all()
+    return data
