@@ -1,6 +1,6 @@
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
-import { MdOutlineSpaceDashboard, MdOutlineTableRows } from "react-icons/md";
+import { MdOutlineSpaceDashboard, MdOutlineTableRows, MdOutlineCategory } from "react-icons/md";
 
 const SideBar = () => {
     return (
@@ -37,6 +37,20 @@ const SideBar = () => {
                             <div className="flex gap-2 items-center">
                                 <MdOutlineTableRows className="text-2xl" />
                                 Saisis
+                            </div>
+                           
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            to="/categories"
+                            className={({ isActive }) =>
+                                "sidebar-link" + (isActive ? " bg-blue-100 text-blue-600 font-semibold" : "")
+                            }
+                        >
+                            <div className="flex gap-2 items-center">
+                                <MdOutlineCategory className="text-2xl" />
+                                Catégories
                             </div>
                            
                         </NavLink>

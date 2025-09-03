@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import Saisis from "./pages/Saisis"
 import Dashboard from "./pages/Dashboard"
 import SideBar from './components/SideBar'
+import Categories from './pages/Categories'
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/saisis" element={<Saisis />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/categories" element={<Categories />} />
           </Routes>
         </div>
       </div>
