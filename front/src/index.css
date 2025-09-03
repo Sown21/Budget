@@ -47,7 +47,7 @@
 }
 
 .pie_chart {
-  @apply border border-gray-200 rounded bg-white w-fit p-6 shadow-lg
+  @apply border border-gray-200 rounded bg-white w-fit p-6 shadow-lg 
 }
 
 .scatter_chart {
@@ -55,11 +55,11 @@
 }
 
 .sidebar-link {
-  @apply block px-3 py-2 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all;
+  @apply block px-3 py-2 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all
 }
 
 :root {
-  background-color: #F9FAFB
+  background-color: #f1f5f9
 }
 
 /* :root {

@@ -78,7 +78,7 @@ const Dashboard = () => {
         }
         getYearSpent()
     }, [year, month])
-    
+
     return (
         <div>
             <div className="flex flex-col gap-4 dashboard_banner shadow_blue">
@@ -137,10 +137,11 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="flex justify-end mt-8 mx-8 gap-8">
-                <div className="scatter_chart shadow_blue">
+                <div className="scatter_chart">
                     <CustomLineChart data_income={currentYearIncome ? currentYearIncome : []} data_spent={currentYearSpent ? currentYearSpent : []} />
                 </div>
-                <div className="pie_chart shadow_blue">
+                <div className="pie_chart flex flex-col gap-8 items-center">
+                    <h3 className="text-xl text-slate-600">Dépenses par catégorie</h3>
                     <CategoryPieChart year={year} month={month} />
                 </div>
             </div>     
