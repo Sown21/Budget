@@ -58,6 +58,10 @@
   @apply block px-3 py-2 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all
 }
 
+.btn_delete {
+  @apply bg-red-50 text-gray-800 font-semibold py-3 px-10 mt-6 rounded-xl shadow hover:shadow-lg text-base cursor-pointer border border-gray-300 hover:-translate-y-1 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all duration-200
+}
+
 :root {
   background-color: #f1f5f9
 }

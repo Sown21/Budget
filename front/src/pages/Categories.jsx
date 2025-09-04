@@ -1,9 +1,16 @@
-import { useEffect, useState } from "react"
-import { getCategories } from "../api/categories";
+import React, { useEffect, useState } from "react"
+import { getCategories, addCategory, addSubCategory, delCategory } from "../api/categories";
 import Category from "../components/Category";
 
 const Categories = () => {
     const [ categories, setCategories ] = useState([])
+    const [ showAddCategory, setShowAddCategory ] = useState(false)
+    const [ showAddSubCategory, setShowAddSubCategory ] = useState(false)
+    const [ categoryName, setCategoryName ] = useState("")
+    const [ subCategoryName, setSubCategoryName ] = useState("")
+    const [ parentId, setParentId ] = useState(null)
+    const [ showDelCategory, setShowDelCategory] = useState(false)
+    const [ categoryId, setCategoryId ] = useState(null)
 
     useEffect(() => {
         const getAllCategorie = async () => {
@@ -17,10 +24,133 @@ const Categories = () => {
         return <div>Chargement des catégories...</div>
     }
 
+    const handleAddCategory = async () => {
+        try {
+            const payload = { name: categoryName }
+            await addCategory(payload)
+            let data = await getCategories()
+            setCategories(data)
+            setShowAddCategory(false)
+            setCategoryName("")
+        } catch (error) {
+            console.error("Erreur lors de l'ajout:", error)
+        }
+    }
+
+    const handleAddSubCategory = async () => {
+        try {
+            const payload = { name: subCategoryName, parent_id: parentId }
+            await addSubCategory(payload)
+            let data = await getCategories()
+            setCategories(data)
+            setShowAddSubCategory(false)
+            setSubCategoryName("")
+            setParentId(null)
+        } catch (error) {
+            console.error("Erreur lors de l'ajout:", error)
+        }
+    }
+
+    const handleDeleteCategory = async () => {
+        try {
+            await delCategory(categoryId)
+            let data = await getCategories()
+            setCategories(data)
+            setShowDelCategory(false)
+            setCategoryId(null)
+        } catch (error) {
+            console.error("Erreur lors de la suppression:", error)
+        }
+    }
+
+    console.log(parentId)
     return (
         <div className="flex flex-col">
             <h1 className="mt-10 mx-12 text-2xl font-semibold">Mes catégories</h1>
-            <div className="mx-8 my-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            <div className="flex justify-between mt-6 mb-12 mx-10">
+                <div className="flex gap-2">
+                    <button className="btn_form" onClick={() => setShowAddCategory(true)}>Ajouter une catégorie</button>
+                    <button className="btn_form" onClick={() => setShowAddSubCategory(true)}>Ajouter une sous-catégorie</button>
+                </div>
+                <button className="btn_delete" onClick={() => setShowDelCategory(true)}>Supprimer une catégorie</button>
+            </div>
+            { showAddCategory && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                    <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
+                        <label htmlFor="category-name" className="block font-medium text-gray-700 mb-2">
+                            Entrez la catégorie à ajouter : 
+                        </label>
+                        <div className="flex justify-center">
+                            <input onChange={e => setCategoryName(e.target.value)} placeholder="Catégorie" className="border rounded p-2 bg-white/80 mt-2"></input>
+                        </div>
+                        <div className="flex gap-2 justify-center">
+                            <button className="btn_form" onClick={() => handleAddCategory()}>Ajouter</button>
+                            <button className="btn_form" onClick={() => setShowAddCategory(false)}>Annuler</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            { showAddSubCategory && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                    <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
+                        <label htmlFor="category-name" className="block font-medium text-gray-700 mb-2">
+                            Séléctionez la catégorie principale et entrez le nom de la sous catégorie 
+                        </label>
+                        <div className="flex justify-center">
+                            <select className="p-2 border rounded bg-white/80 my-2" onChange={e => setParentId(e.target.value)}>
+                                <option value="">-- Choisir une catégorie --</option>
+                                {categories.map((cat) => (
+                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                ))}
+                            </select>
+                            <input onChange={e => setSubCategoryName(e.target.value)} placeholder="Sous Catégorie" className="border rounded p-2 bg-white/80 my-2"></input>
+                        </div>
+                        <div className="flex gap-2 justify-center">
+                            <button className="btn_form" onClick={() => handleAddSubCategory()}>Ajouter</button>
+                            <button className="btn_form" onClick={() => { setShowAddSubCategory(false), setSubCategoryName(""), setParentId(null)}}>Annuler</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            { showDelCategory && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                    <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
+                        <label className="block font-medium text-gray-700 mb-2">
+                            Sélectionnez la catégorie à supprimer
+                        </label>
+                        <div className="flex justify-center">
+                            <select className="p-2 border rounded bg-white/80 my-2" onChange={e => setCategoryId(e.target.value)}>
+                                <option value="">-- Choisir une catégorie --</option>
+                                    {categories.map((cat) => (
+                                        <React.Fragment key={cat.id}>
+                                            {/* Catégorie principale */}
+                                            <option value={cat.id}>{cat.name}</option>
+                                            
+                                            {/* Sous-catégories avec indentation */}
+                                            {cat.children && cat.children.map((child) => (
+                                                <option key={child.id} value={child.id}>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;└─ {child.name}
+                                                </option>
+                                            ))}
+                                        </React.Fragment>
+                                    ))}
+                            </select>
+                        </div>
+                        <div className="flex gap-2 justify-center">
+                            <button className="btn_delete" onClick={() => handleDeleteCategory()}>
+                                Supprimer
+                            </button>
+                            <button className="btn_form" onClick={() => {
+                                setShowDelCategory(false);
+                                setCategoryId(null);
+                            }}>
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            <div className="mx-8 my-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
                 {categories.map((category) => (
                     <Category key={category.id} category={category} />
                 ))}

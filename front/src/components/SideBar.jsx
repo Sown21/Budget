@@ -36,7 +36,7 @@ const SideBar = () => {
                         >
                             <div className="flex gap-2 items-center">
                                 <MdOutlineTableRows className="text-2xl" />
-                                Saisis
+                                Saisies
                             </div>
                            
                         </NavLink>
