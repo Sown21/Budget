@@ -96,7 +96,7 @@ const Categories = () => {
                 <button className="btn_delete" onClick={() => setShowDelCategory(true)}>Supprimer une catégorie</button>
             </div>
             { showAddCategory && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur">
                     <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
                         <label htmlFor="category-name" className="block font-medium text-gray-700 mb-2">
                             Entrez la catégorie à ajouter : 
@@ -112,7 +112,7 @@ const Categories = () => {
                 </div>
             )}
             { showAddSubCategory && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur">
                     <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
                         <label htmlFor="category-name" className="block font-medium text-gray-700 mb-2">
                             Séléctionez la catégorie principale et entrez le nom de la sous catégorie 
@@ -134,7 +134,7 @@ const Categories = () => {
                 </div>
             )}
             { showDelCategory && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur">
                     <div className="bg-red-100 p-4 rounded border-blue-100 shadow-lg p-6 backdrop-blur">
                         <label className="block font-medium text-gray-700 mb-2">
                             Sélectionnez la catégorie à supprimer
@@ -176,8 +176,8 @@ const Categories = () => {
                 </div>
             )}
             { showConfirmDelete && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-                    <div className="bg-white/60 p-4 rounded border-blue-100 shadow-lg p-6 backdrop-blur">
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur">
+                    <div className="bg-red-100 p-4 rounded border-blue-100 shadow-lg p-6">
                         <div className="flex justify-center">
                            <p className="text-lg">Etes vous sûr de vouloir supprimer definitivement la catégorie <span className="font-semibold">{categoryName}</span> ?</p>
                         </div>

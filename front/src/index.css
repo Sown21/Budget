@@ -59,7 +59,7 @@
 }
 
 .btn_delete {
-  @apply bg-red-50 text-gray-800 font-semibold py-3 px-10 mt-6 rounded-xl shadow hover:shadow-lg text-base cursor-pointer border border-gray-300 hover:-translate-y-1 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all duration-200
+  @apply bg-red-200 text-gray-800 font-semibold py-3 px-10 mt-6 rounded-xl shadow hover:shadow-lg text-base cursor-pointer border border-red-300 hover:-translate-y-1 hover:bg-red-300 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all duration-200
 }
 
 :root {
