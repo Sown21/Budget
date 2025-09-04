@@ -11,6 +11,7 @@ const Categories = () => {
     const [ parentId, setParentId ] = useState(null)
     const [ showDelCategory, setShowDelCategory] = useState(false)
     const [ categoryId, setCategoryId ] = useState(null)
+    const [ showConfirmDelete, setShowConfirmDelete ] = useState(false)
 
     useEffect(() => {
         const getAllCategorie = async () => {
@@ -57,13 +58,33 @@ const Categories = () => {
             let data = await getCategories()
             setCategories(data)
             setShowDelCategory(false)
+            setShowConfirmDelete(false)
             setCategoryId(null)
+            setCategoryName("")
         } catch (error) {
             console.error("Erreur lors de la suppression:", error)
         }
     }
 
-    console.log(parentId)
+    const getCategoryNameById = (id) => {
+        // Chercher dans les catégories principales
+        for (let cat of categories) {
+            if (cat.id == id) {
+                return cat.name;
+            }
+            // Chercher dans les sous-catégories
+            if (cat.children) {
+                for (let child of cat.children) {
+                    if (child.id == id) {
+                        return child.name;
+                    }
+                }
+            }
+        }
+        return "";
+    };
+
+    console.log(categoryName)
     return (
         <div className="flex flex-col">
             <h1 className="mt-10 mx-12 text-2xl font-semibold">Mes catégories</h1>
@@ -114,12 +135,16 @@ const Categories = () => {
             )}
             { showDelCategory && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-                    <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
+                    <div className="bg-red-100 p-4 rounded border-blue-100 shadow-lg p-6 backdrop-blur">
                         <label className="block font-medium text-gray-700 mb-2">
                             Sélectionnez la catégorie à supprimer
                         </label>
                         <div className="flex justify-center">
-                            <select className="p-2 border rounded bg-white/80 my-2" onChange={e => setCategoryId(e.target.value)}>
+                            <select className="p-2 border rounded bg-white/80 my-2" onChange={e => { 
+                                const selectedId = e.target.value;
+                                setCategoryId(selectedId);
+                                setCategoryName(getCategoryNameById(selectedId));
+                            }}>
                                 <option value="">-- Choisir une catégorie --</option>
                                     {categories.map((cat) => (
                                         <React.Fragment key={cat.id}>
@@ -137,12 +162,34 @@ const Categories = () => {
                             </select>
                         </div>
                         <div className="flex gap-2 justify-center">
-                            <button className="btn_delete" onClick={() => handleDeleteCategory()}>
+                            <button className="btn_delete" onClick={() => setShowConfirmDelete(true)}>
                                 Supprimer
                             </button>
                             <button className="btn_form" onClick={() => {
                                 setShowDelCategory(false);
                                 setCategoryId(null);
+                            }}>
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            { showConfirmDelete && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                    <div className="bg-white/60 p-4 rounded border-blue-100 shadow-lg p-6 backdrop-blur">
+                        <div className="flex justify-center">
+                           <p className="text-lg">Etes vous sûr de vouloir supprimer definitivement la catégorie <span className="font-semibold">{categoryName}</span> ?</p>
+                        </div>
+                        <div className="flex gap-2 justify-center">
+                            <button className="btn_delete" onClick={() => handleDeleteCategory()}>
+                                Supprimer
+                            </button>
+                            <button className="btn_form" onClick={() => {
+                                setShowDelCategory(false);
+                                setShowConfirmDelete(false);
+                                setCategoryId(null);
+                                setCategoryName("")
                             }}>
                                 Annuler
                             </button>
