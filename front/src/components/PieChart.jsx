@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useEffect, useState } from 'react';
 import { totalByCategory } from '../api/spents';
 
@@ -16,25 +16,28 @@ const CategoryPieChart = ({ year, month }) => {
     }, [year, month])
 
     return (
-        <PieChart width={400} height={300}>
-            <Pie
-                data={data}
-                dataKey="total"
-                nameKey="category"
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                innerRadius={60}
-                stroke="none"
-                label={({value}) => `${value} €`}
-            >
-                {data.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-        </PieChart>
+        <ResponsiveContainer width="100%" height={400}>
+            <PieChart width={400} height={300}>
+                <Pie
+                    data={data}
+                    dataKey="total"
+                    nameKey="category"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    innerRadius={60}
+                    stroke="none"
+                    label={({value}) => `${value} €`}
+                    minAngle={10}
+                >
+                    {data.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+            </PieChart>
+        </ResponsiveContainer>
     )
 }
 

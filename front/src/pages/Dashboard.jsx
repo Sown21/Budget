@@ -140,7 +140,7 @@ const Dashboard = () => {
                 <div className="scatter_chart">
                     <CustomLineChart data_income={currentYearIncome ? currentYearIncome : []} data_spent={currentYearSpent ? currentYearSpent : []} />
                 </div>
-                <div className="pie_chart flex flex-col gap-8 items-center">
+                <div className="pie_chart flex flex-col gap-10 items-center">
                     <h3 className="text-xl text-slate-600">Dépenses par catégorie</h3>
                     <CategoryPieChart year={year} month={month} />
                 </div>

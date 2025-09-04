@@ -47,11 +47,11 @@
 }
 
 .pie_chart {
-  @apply border border-gray-200 rounded bg-white w-fit p-6 shadow-lg 
+  @apply border border-gray-200 rounded bg-white w-164 p-6 shadow-lg 
 }
 
 .scatter_chart {
-  @apply border border-gray-200 rounded bg-white w-full p-6 shadow-lg
+  @apply border border-gray-200 rounded bg-white w-full p-16 shadow-lg
 }
 
 .sidebar-link {

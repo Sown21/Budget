@@ -107,7 +107,7 @@ const Saisis = () => {
             />
 
             {showDeleteConfirm && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/20">
                     <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
                         <p className="font-semibold text-xl">Confirmer la suppression ?</p>
                         <div className="flex gap-4">
@@ -119,7 +119,7 @@ const Saisis = () => {
                 </div>
             )}
             {showModify && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/20">
                     <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
                         <SpentForm
                             categories={categories}
