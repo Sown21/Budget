@@ -84,7 +84,7 @@ def get_total_spent(year: int, db: Session, month: Optional[int] = None):
     if month:
         query = query.filter(func.extract('month', Spent.date) == month)
     total = query.filter(~Spent.category_id.in_(ids_to_exclude)).scalar()
-    return total or 0.0
+    return round(total or 0.0, 2)
 
 def get_total_income(year: int, db: Session, month: Optional[int] = None):
     ids_to_keep = db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10)).subquery()
@@ -92,7 +92,7 @@ def get_total_income(year: int, db: Session, month: Optional[int] = None):
     if month:
         query = query.filter(func.extract('month', Spent.date) == month)
     total = query.filter(Spent.category_id.in_(ids_to_keep)).scalar()
-    return total or 0.0
+    return round(total or 0.0, 2)
 
 def get_total_remaining_by_month(year: int, db: Session, month: int):
     prev_month = month - 1 if month > 1 else 12
@@ -100,7 +100,7 @@ def get_total_remaining_by_month(year: int, db: Session, month: int):
     total_spent = get_total_spent(year=year, month=month, db=db)
     total_income = get_total_income(year=prev_year, month=prev_month, db=db)
     remaining = total_income - total_spent
-    return remaining
+    return round(remaining, 0)
 
 def get_all_years(db: Session):
     years = db.query(func.extract('year', Spent.date)).distinct().all()
