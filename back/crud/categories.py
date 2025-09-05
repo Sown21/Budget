@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, selectinload
-from models.spent import Category
+from models.spent import Category, Spent
 from schemas.categories import CategoryCreate, SubCategoryCreate
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -35,7 +35,11 @@ def create_sub_category(category: SubCategoryCreate, db: Session):
     
 def delete_category(category_id: int, db: Session):
     try: 
-        db.query(Category).filter(Category.parent_id == category_id).update({"parent_id": 13})
+        default_category = 13
+        db.query(Spent).filter(Spent.category_id == category_id).update(
+            {"category_id": default_category}
+        )
+        db.query(Category).filter(Category.parent_id == category_id).update({"parent_id": default_category})
         category = db.query(Category).filter(Category.id == category_id).first()
         db.delete(category)
         db.commit()
