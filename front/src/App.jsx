@@ -1,27 +1,28 @@
-import { useState } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import Saisis from "./pages/Saisis"
-import Dashboard from "./pages/Dashboard"
-import SideBar from './components/SideBar'
-import Categories from './pages/Categories'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SideBar from './components/SideBar';
+import Dashboard from './pages/Dashboard';
+import Saisis from './pages/Saisis';
+import Categories from './pages/Categories';
+import { UserProvider } from './context/UserContext';
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
-
   return (
-    <BrowserRouter>
-      <div className="flex min-h-screen">
-        <SideBar />
-        <div className="flex-1">
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/saisis" element={<Saisis />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/categories" element={<Categories />} />
-          </Routes>
+    <UserProvider>
+      <Router>
+        <div className="flex h-screen bg-gray-100">
+          <SideBar />
+          <main className="flex-1 overflow-auto">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/saisis" element={<Saisis />} />
+              <Route path="/categories" element={<Categories />} />
+            </Routes>
+          </main>
         </div>
-      </div>
+      </Router>
       <ToastContainer
         position="bottom-right"
         autoClose={3000}
@@ -34,8 +35,8 @@ function App() {
         pauseOnHover
         theme="colored"
       />
-    </BrowserRouter>
-  )
+    </UserProvider>
+  );
 }
 
-export default App
+export default App;

@@ -1,7 +1,7 @@
 import instance from "./axios"
 
-export const getSpents = async () => {
-    const response = await instance.get("/spents/");
+export const getSpents = async (id) => {
+    const response = await instance.get(`/spents/?user_id=${id}`);
     return response.data
 }
 
@@ -11,7 +11,7 @@ export const postSpents = async (payload) => {
 }
 
 export const deleteSpent = async (id) => {
-    const response = await instance.delete(`/spents/${id}`)
+    const response = await instance.delete(`/spents/?user_id=${id}`)
     return response.data
 }
 

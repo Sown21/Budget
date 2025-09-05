@@ -1,6 +1,7 @@
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import { MdOutlineSpaceDashboard, MdOutlineTableRows, MdOutlineCategory } from "react-icons/md";
+import UserSelector from "./UserSelector";
 
 const SideBar = () => {
     return (
@@ -55,6 +56,7 @@ const SideBar = () => {
                            
                         </NavLink>
                     </li>
+                    <UserSelector />
 
                 </ul>
                 </nav>
