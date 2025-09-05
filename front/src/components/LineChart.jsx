@@ -27,6 +27,11 @@ const CustomLineChart = ({ data_income, data_spent }) => {
     };
   });
 
+  const formatCurrency = (value) => {
+    const num = parseFloat(value);
+    return num % 1 === 0 ? `${num} €` : `${num.toFixed(2).replace(/\.?0+$/, '')} €`;
+  };
+
   return (
     <ResponsiveContainer width="100%" height={400}>
       <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
@@ -36,7 +41,7 @@ const CustomLineChart = ({ data_income, data_spent }) => {
         <Line type="monotone" dataKey="capitalRestant" stroke="#F97316" strokeWidth={3} name="Capital restant" dot={{ fill: 'orange', r: 2 }} />
         <XAxis dataKey="date" />
         <YAxis />
-        <Tooltip formatter={(value, name) => [`${value}€`, name]} />
+        <Tooltip formatter={(value, name) => [formatCurrency(value), name]} />
         <Legend align="right" verticalAlign="top" wrapperStyle={{ paddingBottom: '20px' }} />
       </LineChart>
     </ResponsiveContainer>

@@ -15,26 +15,35 @@ const CategoryPieChart = ({ year, month }) => {
         fetchData()
     }, [year, month])
 
+    const formatCurrency = (value) => {
+        const num = parseFloat(value);
+        return num % 1 === 0 ? `${num} €` : `${num.toFixed(2).replace(/\.?0+$/, '')} €`;
+    };
+
     return (
-        <ResponsiveContainer width="100%" height={400}>
-            <PieChart width={400} height={300}>
+        <ResponsiveContainer width="100%" height={450}>
+            <PieChart>
                 <Pie
                     data={data}
                     dataKey="total"
                     nameKey="category"
                     cx="50%"
-                    cy="50%"
+                    cy="40%"
                     outerRadius={100}
                     innerRadius={60}
-                    stroke="none"
-                    label={({value}) => `${value} €`}
-                    minAngle={10}
+                    stroke="white"
+                    strokeWidth={1}
+                    label={({value}) => formatCurrency(value)}
+                    labelLine={true}
+                    minAngle={8}
                 >
                     {data.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip 
+                    formatter={(value) => formatCurrency(value)}
+                />
                 <Legend />
             </PieChart>
         </ResponsiveContainer>
