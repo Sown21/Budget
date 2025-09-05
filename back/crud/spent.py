@@ -11,6 +11,7 @@ def get_spent(db: Session, spent_id: int):
 
 def get_spents(
     db: Session,
+    user_id: int,
     category_id: Optional[int] = None,
     date_min: Optional[date] = None,
     date_max: Optional[date] = None,
@@ -19,20 +20,25 @@ def get_spents(
     search: Optional[str] = None,
     ) -> List[dict]:
 
-    query = db.query(Spent).options(selectinload(Spent.category))
+    query = db.query(Spent).options(selectinload(Spent.category)).filter(Spent.user_id == user_id)
 
     if category_id is not None:
         query = query.filter(Spent.category_id == category_id)
-    if date_min is not None:
+    if date_min:
         query = query.filter(Spent.date >= date_min)
-    if date_max is not None:
+    if date_max:
         query = query.filter(Spent.date <= date_max)
     if amount_min is not None:
         query = query.filter(Spent.amount >= amount_min)
     if amount_max is not None:
         query = query.filter(Spent.amount <= amount_max)
-    if search is not None:
-        query = query.filter(Spent.name.ilike(f"%{search}%"))
+    if search:
+        query = query.filter(
+            or_(
+                Spent.name.ilike(f"%{search}%"),
+                Spent.description.ilike(f"%{search}%")
+            )
+        )
 
     spents = query.all()
     return [
@@ -42,6 +48,7 @@ def get_spents(
             "amount": spent.amount,
             "description": spent.description,
             "category_id": spent.category_id,
+            "user_id": spent.user_id,
             "category_name": spent.category.name if spent.category else None,
             "date": spent.date
         }
@@ -49,7 +56,7 @@ def get_spents(
     ]
 
 def create_spent(db: Session, spent: SpentCreate):
-    existing_spents = db.query(Spent).filter(Spent.amount == spent.amount, Spent.name == spent.name, Spent.date == spent.date, Spent.category_id == spent.category_id).first()
+    existing_spents = db.query(Spent).filter(Spent.amount == spent.amount, Spent.name == spent.name, Spent.date == spent.date, Spent.category_id == spent.category_id, Spent.user_id == spent.user_id).first()
     if existing_spents:
         raise HTTPException(status_code=409, detail="Cette dépense existe déjà !")
     else:
@@ -78,17 +85,17 @@ def update_spent(spent_id: int, spent_data: SpentUpdate, db: Session):
         return spent
     raise HTTPException(status_code=404, detail=f"La dépense {spent_id} n'existe pas.")
 
-def get_total_spent(year: int, db: Session, month: Optional[int] = None):
+def get_total_spent(year: int, user_id: int, db: Session, month: Optional[int] = None):
     ids_to_exclude = db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10)).subquery()
-    query = db.query(func.sum(Spent.amount)).filter(func.extract('year', Spent.date) == year)
+    query = db.query(func.sum(Spent.amount)).filter(func.extract('year', Spent.date) == year, Spent.user_id == user_id)
     if month:
         query = query.filter(func.extract('month', Spent.date) == month)
     total = query.filter(~Spent.category_id.in_(ids_to_exclude)).scalar()
     return round(total or 0.0, 2)
 
-def get_total_income(year: int, db: Session, month: Optional[int] = None):
+def get_total_income(year: int, user_id: int, db: Session, month: Optional[int] = None):
     ids_to_keep = db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10)).subquery()
-    query = db.query(func.sum(Spent.amount)).filter(func.extract('year', Spent.date) == year)
+    query = db.query(func.sum(Spent.amount)).filter(func.extract('year', Spent.date) == year, Spent.user_id == user_id)
     if month:
         query = query.filter(func.extract('month', Spent.date) == month)
     total = query.filter(Spent.category_id.in_(ids_to_keep)).scalar()

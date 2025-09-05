@@ -14,6 +14,7 @@ def create_spent(spent: SpentCreate, db: Session = Depends(get_db)):
 
 @router.get("/", response_model=List[SpentRead])
 def read_spents(
+    user_id: int = Query(..., description="ID de l'utilisateur"),
     category_id: Optional[int] = Query(None),
     date_min: Optional[date] = Query(None),
     date_max: Optional[date] = Query(None),
@@ -24,6 +25,7 @@ def read_spents(
 ):
     return crud_spent.get_spents(
         db=db,
+        user_id=user_id,
         category_id=category_id,
         date_min=date_min,
         date_max=date_max,
