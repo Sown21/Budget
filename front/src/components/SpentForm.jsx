@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Valider", cancelButton, error, success, showMessage }) => {
+const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Valider", cancelButton }) => {
   const [categorySelected, setCategorySelected] = useState(initialValues.category_id || "");
   const [subCategorySelected, setSubCategorySelected] = useState(initialValues.subCategory_id || "");
   const [name, setName] = useState(initialValues.name || "");
@@ -8,16 +8,17 @@ const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Va
   const [amount, setAmount] = useState(initialValues.amount || "");
   const [date, setDate] = useState(initialValues.date || "");
 
+  // Set initial values only once when component mounts or when initialValues.name changes (for modification modal)
   useEffect(() => {
-    if (success && showMessage) {
-      setCategorySelected("");
-      setSubCategorySelected("");
-      setName("");
-      setDescription("");
-      setAmount("");
-      setDate("");
+    if (initialValues.name) {
+      setCategorySelected(initialValues.category_id || "");
+      setSubCategorySelected(initialValues.subCategory_id || "");
+      setName(initialValues.name || "");
+      setDescription(initialValues.description || "");
+      setAmount(initialValues.amount || "");
+      setDate(initialValues.date || "");
     }
-  }, [success, showMessage]);
+  }, [initialValues.name]); // Only trigger when name changes (indicating new data for modification)
 
   const selectedCat = categories.find(cat => cat.id === Number(categorySelected));
   const subCategories = selectedCat?.children?.length ? selectedCat.children : [];
@@ -72,13 +73,6 @@ const SpentForm = ({ categories, initialValues = {}, onSubmit, submitLabel = "Va
       <div className="col-span-1 md:col-span-2 flex justify-center gap-4">
         <button className="btn_form" type="submit">{submitLabel}</button>
         {typeof cancelButton !== 'undefined' && cancelButton}
-      </div>
-      <div
-        className={`col-span-1 md:col-span-2 transition-opacity duration-700 flex justify-center mt-2 ${
-          showMessage ? "opacity-100" : "opacity-0"
-        }`}>
-        {error && <span className="text-red-500">{error}</span>}
-        {success && <span className="text-green-500">{success}</span>}
       </div>
     </form>
   );

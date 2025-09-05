@@ -4,6 +4,8 @@ import Saisis from "./pages/Saisis"
 import Dashboard from "./pages/Dashboard"
 import SideBar from './components/SideBar'
 import Categories from './pages/Categories'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
 
@@ -20,6 +22,18 @@ function App() {
           </Routes>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </BrowserRouter>
   )
 }

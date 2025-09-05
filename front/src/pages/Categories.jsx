@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { getCategories, addCategory, addSubCategory, delCategory } from "../api/categories";
 import Category from "../components/Category";
+import { toast } from 'react-toastify';
 
 const Categories = () => {
     const [ categories, setCategories ] = useState([])
@@ -33,8 +34,11 @@ const Categories = () => {
             setCategories(data)
             setShowAddCategory(false)
             setCategoryName("")
+            toast.success("Catégorie ajoutée avec succès !")
         } catch (error) {
             console.error("Erreur lors de l'ajout:", error)
+            const errorMessage = error.response?.data?.detail || "Erreur lors de l'ajout de la catégorie"
+            toast.error(errorMessage)
         }
     }
 
@@ -47,8 +51,11 @@ const Categories = () => {
             setShowAddSubCategory(false)
             setSubCategoryName("")
             setParentId(null)
+            toast.success("Sous-catégorie ajoutée avec succès !")
         } catch (error) {
             console.error("Erreur lors de l'ajout:", error)
+            const errorMessage = error.response?.data?.detail || "Erreur lors de l'ajout de la sous-catégorie"
+            toast.error(errorMessage)
         }
     }
 
@@ -61,8 +68,11 @@ const Categories = () => {
             setShowConfirmDelete(false)
             setCategoryId(null)
             setCategoryName("")
+            toast.success("Catégorie supprimée avec succès !")
         } catch (error) {
             console.error("Erreur lors de la suppression:", error)
+            const errorMessage = error.response?.data?.detail || "Erreur lors de la suppression de la catégorie"
+            toast.error(errorMessage)
         }
     }
 
