@@ -1,23 +1,26 @@
-import { useState, useEffect } from "react"
-import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent } from "../api/spents"
+import { useState, useEffect } from "react";
+import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent } from "../api/spents";
 import { LuPiggyBank } from "react-icons/lu";
 import { TbMoneybag } from "react-icons/tb";
 import { GiPayMoney, GiMoneyStack } from "react-icons/gi";
 import CustomLineChart from "../components/LineChart";
 import CategoryTable from "../components/TableChart";
+import { useUser } from "../context/UserContext";
 
 const Dashboard = () => {
-    const [ year, setYear ] = useState(new Date().getFullYear());
-    const [ yearTotalSpent, setYearTotalSpent ] = useState("")
-    const [ yearTotalIncome, setYearTotalIncome ] = useState("")
-    const [ yearTotalRemaining, setYearTotalRemaining ] = useState("")
-    const [ yearTotalRemainingByMonth, setYearTotalRemainingByMonth ] = useState("")
-    const [ years, setYears ] = useState([])
-    const [ month, setMonth ] = useState("")
-    const [ currentYearIncome, setCurrentYearIncome ] = useState([])
-    const [ currentYearSpent, setCurrentYearSpent ] = useState([])
-    const [ isLoading, setIsLoading ] = useState(true)
-    const [ hasData, setHasData ] = useState(false)
+    const { selectedUserId } = useUser();
+    const [year, setYear] = useState(new Date().getFullYear());
+    const [yearTotalSpent, setYearTotalSpent] = useState("");
+    const [yearTotalIncome, setYearTotalIncome] = useState("");
+    const [yearTotalRemaining, setYearTotalRemaining] = useState("");
+    const [yearTotalRemainingByMonth, setYearTotalRemainingByMonth] = useState("");
+    const [years, setYears] = useState([]);
+    const [month, setMonth] = useState("");
+    const [currentYearIncome, setCurrentYearIncome] = useState([]);
+    const [currentYearSpent, setCurrentYearSpent] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [hasData, setHasData] = useState(false);
+    
     const months = [
         { value: 1, label: "Janvier" },
         { value: 2, label: "Février" },
@@ -35,17 +38,34 @@ const Dashboard = () => {
 
     useEffect(() => {
         const loadAllData = async () => {
+            // Ne pas charger si pas d'utilisateur sélectionné
+            if (!selectedUserId) {
+                console.log('👤 Dashboard - Aucun utilisateur sélectionné, skip loadAllData');
+                setIsLoading(false);
+                setHasData(false);
+                return;
+            }
+
+            console.log('📊 Dashboard - Chargement des données pour user:', selectedUserId, 'year:', year, 'month:', month);
             setIsLoading(true);
             
             try {
+                // Passer selectedUserId à toutes les fonctions API
                 const [spents, incomes, remaining, allYearsData, yearIncomeData, yearSpentData] = await Promise.all([
-                    totalSpent(year, month),
-                    totalIncome(year, month),
-                    totalRemaining(year, month),
-                    allYears(),
-                    yearIncome(year),
-                    yearSpent(year)
+                    totalSpent(selectedUserId, year, month),
+                    totalIncome(selectedUserId, year, month),
+                    totalRemaining(selectedUserId, year, month),
+                    allYears(selectedUserId),
+                    yearIncome(selectedUserId, year),
+                    yearSpent(selectedUserId, year)
                 ]);
+
+                console.log('✅ Dashboard - Données récupérées:', {
+                    spents, incomes, remaining, 
+                    yearsCount: allYearsData.length,
+                    incomeData: yearIncomeData.length,
+                    spentData: yearSpentData.length
+                });
 
                 setYearTotalSpent(spents);
                 setYearTotalIncome(incomes);
@@ -59,19 +79,24 @@ const Dashboard = () => {
 
                 // Gestion du mois
                 if (month !== "") {
-                    const monthRemaining = await totalRemainingByMonth(year, month);
+                    const monthRemaining = await totalRemainingByMonth(selectedUserId, year, month);
                     setYearTotalRemainingByMonth(monthRemaining);
                 } else {
                     setYearTotalRemainingByMonth(null);
                 }
 
+            } catch (error) {
+                console.error('❌ Dashboard - Erreur lors du chargement des données:', error);
+                setHasData(false);
             } finally {
                 setIsLoading(false);
             }
         };
 
         loadAllData();
-    }, [year, month]);
+    }, [selectedUserId, year, month]); // Ajouter selectedUserId dans les dépendances
+
+    console.log('🎯 Dashboard - Render:', { selectedUserId, year, month, isLoading, hasData });
 
     // Loading state pendant le chargement initial
     if (isLoading) {
@@ -85,12 +110,27 @@ const Dashboard = () => {
         );
     }
 
+    // Si pas d'utilisateur sélectionné
+    if (!selectedUserId) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="dashboard_banner p-8 flex flex-col items-center">
+                    <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-6 py-4 rounded-lg">
+                        <p className="font-bold text-lg">Aucun utilisateur sélectionné</p>
+                        <p>Veuillez sélectionner un utilisateur dans la barre latérale pour voir le dashboard.</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     // Message uniquement si pas de données ET chargement terminé
     if (!hasData) {
         return (
-            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+            <div className="flex items-center justify-center min-h-screen">
                 <div className="dashboard_banner p-8 flex flex-col items-center">
-                    <h3 className="text-xl font-semibold">Veuillez saisir vos premières données</h3>
+                    <h3 className="text-xl font-semibold mb-4">Aucune donnée pour cet utilisateur</h3>
+                    <p className="text-gray-600 mb-4">Veuillez saisir vos premières données pour voir le dashboard.</p>
                     <a href="/saisis">
                         <button className="btn_form">Aller aux saisies</button>
                     </a>
@@ -103,18 +143,30 @@ const Dashboard = () => {
         <div>
             <div className="flex flex-col gap-4 dashboard_banner shadow_blue">
                 <div className="flex gap-4 mx-10">
-                    <select className="banner_selector" value={year} onChange={e => setYear(Number(e.target.value))}>
+                    <div className="text-sm text-gray-600 flex items-center">
+                        Utilisateur ID: {selectedUserId}
+                    </div>
+                    <select 
+                        className="banner_selector" 
+                        value={year} 
+                        onChange={e => setYear(Number(e.target.value))}
+                    >
                         {years.map((y) => (
                             <option key={y} value={y}>{y}</option>
                         ))}  
                     </select>
-                <select className="banner_selector" value={month === null ? "" : month} onChange={e => setMonth(e.target.value === "" ? "" : Number(e.target.value))}>
-                    <option value="">Année entière</option>
-                    {months.map((m) => (
-                        <option key={m.value} value={m.value}>{m.label}</option>
-                    ))}  
-                </select>
+                    <select 
+                        className="banner_selector" 
+                        value={month === null ? "" : month} 
+                        onChange={e => setMonth(e.target.value === "" ? "" : Number(e.target.value))}
+                    >
+                        <option value="">Année entière</option>
+                        {months.map((m) => (
+                            <option key={m.value} value={m.value}>{m.label}</option>
+                        ))}  
+                    </select>
                 </div>
+                
                 <div className="flex gap-8 mx-10 mt-6">
                     <div className="budget_card border-yellow-100 bg-yellow-100">
                         <div className="flex gap-8">
@@ -125,6 +177,7 @@ const Dashboard = () => {
                         </div>
                         <p className="font-semibold">{yearTotalIncome}€</p>
                     </div>
+                    
                     <div className="budget_card border-purple-100 bg-purple-100">
                         <div className="flex gap-8">
                             <h2>Total dépensé</h2>
@@ -134,7 +187,8 @@ const Dashboard = () => {
                         </div>
                         <p className="font-semibold">{yearTotalSpent} €</p>
                     </div>
-                        {month && (
+                    
+                    {month && (
                         <div className="budget_card border-blue-100 bg-blue-100">
                             <div className="flex gap-8">
                                 <h2>Restant pour le mois</h2>
@@ -144,7 +198,8 @@ const Dashboard = () => {
                             </div>
                             <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
                         </div>
-                        )}
+                    )}
+                    
                     <div className="budget_card border-orange-100 bg-orange-100">
                         <div className="flex gap-8">
                             <h2>Capital restant</h2>
@@ -159,15 +214,22 @@ const Dashboard = () => {
             
             {/* Flexbox avec items-start pour alignment en haut */}
             <div className="flex flex-col lg:flex-row gap-8 mt-8 mx-8 items-start">
-                <div className="flex-1 min-w-0"> {/* Taille normale */}
-                    <CategoryTable year={year} month={month} />
+                <div className="flex-1 min-w-0">
+                    <CategoryTable 
+                        year={year} 
+                        month={month} 
+                        selectedUserId={selectedUserId}
+                    />
                 </div>
-                <div className="line_chart flex-[2] min-w-0"> {/* 2x plus large */}
-                    <CustomLineChart data_income={currentYearIncome ? currentYearIncome : []} data_spent={currentYearSpent ? currentYearSpent : []} />
+                <div className="line_chart flex-[2] min-w-0">
+                    <CustomLineChart 
+                        data_income={currentYearIncome ? currentYearIncome : []} 
+                        data_spent={currentYearSpent ? currentYearSpent : []} 
+                    />
                 </div>
             </div>     
         </div>
-    )
-}
+    );
+};
 
 export default Dashboard;
