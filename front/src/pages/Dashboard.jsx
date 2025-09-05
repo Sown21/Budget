@@ -79,6 +79,18 @@ const Dashboard = () => {
         getYearSpent()
     }, [year, month])
 
+    if (yearTotalSpent == "")
+        return (
+            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                <div className="dashboard_banner p-8 flex flex-col items-center">
+                    <h3 className="text-xl font-semibold">Veuillez saisir vos premières données</h3>
+                    <a href="/saisis">
+                        <button className="btn_form">Aller aux saisies</button>
+                    </a>
+                </div>
+            </div>
+    )
+
     return (
         <div>
             <div className="flex flex-col gap-4 dashboard_banner shadow_blue">
