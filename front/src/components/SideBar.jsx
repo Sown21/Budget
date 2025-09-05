@@ -6,7 +6,7 @@ const SideBar = () => {
     return (
         <div className="flex min-h-screen">
             {/* Sidebar */}
-            <aside className="bg-white w-64 p-6 shadow-lg flex flex-col rounded my-10 border border-gray-200">
+            <aside className="bg-white w-64 p-6 shadow-lg flex flex-col rounded my-4 border border-gray-200">
                 <div className="font-bold text-xl mb-8 flex gap-4 justify-center items-end">
                     <FaMoneyBillTrendUp className="text-3xl text-blue-500" />
                     <h2>Budget</h2>

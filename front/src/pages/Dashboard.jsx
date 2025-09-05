@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
 import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent } from "../api/spents"
-import CategoryPieChart from "../components/PieChart";
 import { LuPiggyBank } from "react-icons/lu";
 import { TbMoneybag } from "react-icons/tb";
 import { GiPayMoney, GiMoneyStack } from "react-icons/gi";
 import CustomLineChart from "../components/LineChart";
+import CategoryTable from "../components/TableChart";
 
 const Dashboard = () => {
     const [ year, setYear ] = useState(new Date().getFullYear());
@@ -136,13 +136,14 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex justify-end mt-8 mx-8 gap-8">
-                <div className="scatter_chart">
-                    <CustomLineChart data_income={currentYearIncome ? currentYearIncome : []} data_spent={currentYearSpent ? currentYearSpent : []} />
+            
+            {/* Flexbox avec items-start pour alignment en haut */}
+            <div className="flex flex-col lg:flex-row gap-8 mt-8 mx-8 items-start">
+                <div className="flex-1 min-w-0"> {/* Taille normale */}
+                    <CategoryTable year={year} month={month} />
                 </div>
-                <div className="pie_chart flex flex-col gap-10 items-center">
-                    <h3 className="text-xl text-slate-600">Dépenses par catégorie</h3>
-                    <CategoryPieChart year={year} month={month} />
+                <div className="line_chart flex-[2] min-w-0"> {/* 2x plus large */}
+                    <CustomLineChart data_income={currentYearIncome ? currentYearIncome : []} data_spent={currentYearSpent ? currentYearSpent : []} />
                 </div>
             </div>     
         </div>
