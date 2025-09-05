@@ -2,8 +2,9 @@ from fastapi import FastAPI
 from core.config import settings
 from core.database import engine, Base
 from api.v1.api import api_router
-from models.spent import Spent
-from core.seed_categories import create_defaut_categories
+from models.spent import Spent, Category
+from models.user import User
+from core.seed_categories import create_defaut_categories, create_default_users
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
@@ -16,6 +17,7 @@ print("Tables à créer:", list(Base.metadata.tables.keys()))
 Base.metadata.create_all(bind=engine)
 
 create_defaut_categories()
+create_default_users()
 
 app = FastAPI(title=settings.app_name, version="1.0.0")
 

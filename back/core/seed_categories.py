@@ -1,6 +1,32 @@
 from sqlalchemy.orm import Session
 from core.database import SessionLocal
 from models.spent import Category
+from models.user import User
+
+def create_default_users():
+    """Crée des utilisateurs par défaut"""
+    db = SessionLocal()
+    try:
+        # Vérifier si des utilisateurs existent déjà
+        existing_users = db.query(User).count()
+        if existing_users == 0:
+            default_users = [
+                User(name="Boulette sous Brioche"),
+                User(name="Spacestylist"),
+            ]
+            
+            for user in default_users:
+                db.add(user)
+            
+            db.commit()
+            print("Utilisateurs par défaut créés avec succès !")
+        else:
+            print("Des utilisateurs existent déjà.")
+    except Exception as e:
+        db.rollback()
+        print(f"Erreur lors de la création des utilisateurs par défaut : {e}")
+    finally:
+        db.close()
 
 def create_defaut_categories():
     db = SessionLocal()
@@ -71,7 +97,7 @@ def create_defaut_categories():
         for sub_category in sub_categories:
             if sub_category.name not in existing_names:
                 db.add(sub_category)
-
+        
         db.commit()
         print("Les Catégories et sous catégories ont été créées avec succès !")
     

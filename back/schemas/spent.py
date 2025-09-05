@@ -7,6 +7,7 @@ class SpentCreate(BaseModel):
     amount: float
     description: str
     category_id: int
+    user_id: int
     date: date
 
     # @field_validator('date')
@@ -29,6 +30,7 @@ class SpentRead(BaseModel):
     amount: float
     description: str
     category_id: int
+    user_id: int
     category_name: Optional[str] = None
     date: date
 
@@ -49,6 +51,7 @@ class SpentUpdate(BaseModel):
     amount: Optional[float] = None
     description: Optional[str] = None
     category_id: Optional[int] = None
+    user_id: Optional[int] = None
     date: Optional[date]
 
     @field_validator('date', mode='before')
