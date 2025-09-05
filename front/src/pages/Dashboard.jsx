@@ -16,6 +16,8 @@ const Dashboard = () => {
     const [ month, setMonth ] = useState("")
     const [ currentYearIncome, setCurrentYearIncome ] = useState([])
     const [ currentYearSpent, setCurrentYearSpent ] = useState([])
+    const [ isLoading, setIsLoading ] = useState(true)
+    const [ hasData, setHasData ] = useState(false)
     const months = [
         { value: 1, label: "Janvier" },
         { value: 2, label: "Février" },
@@ -32,54 +34,59 @@ const Dashboard = () => {
     ];
 
     useEffect(() => {
-        const getTotalSpent = async () => {
-            let spents = await totalSpent(year, month);
-            setYearTotalSpent(spents);
-        }
-        getTotalSpent()
+        const loadAllData = async () => {
+            setIsLoading(true);
+            
+            try {
+                const [spents, incomes, remaining, allYearsData, yearIncomeData, yearSpentData] = await Promise.all([
+                    totalSpent(year, month),
+                    totalIncome(year, month),
+                    totalRemaining(year, month),
+                    allYears(),
+                    yearIncome(year),
+                    yearSpent(year)
+                ]);
 
-        const getTotalIncome = async () => {
-            let incomes = await totalIncome(year, month);
-            setYearTotalIncome(incomes)
-        }
-        getTotalIncome()
+                setYearTotalSpent(spents);
+                setYearTotalIncome(incomes);
+                setYearTotalRemaining(remaining);
+                setYears(allYearsData);
+                setCurrentYearIncome(yearIncomeData);
+                setCurrentYearSpent(yearSpentData);
 
-        const getTotalRemaining = async () => {
-            let remaining = await totalRemaining(year, month);
-            setYearTotalRemaining(remaining)
-        }
-        getTotalRemaining()
-        const getAllYears = async () => {
-            let years = await allYears()
-            setYears(years)
-        }
-        getAllYears()
+                // Déterminer s'il y a des données
+                setHasData(spents !== "" && spents !== "0" && spents !== 0);
 
-        const getTotalRemainingByMonth = async () => {
-            if (month !== "") {
-                let remaining = await totalRemainingByMonth(year, month);
-                setYearTotalRemainingByMonth(remaining)
-            } else {
-                setYearTotalRemainingByMonth(null)
+                // Gestion du mois
+                if (month !== "") {
+                    const monthRemaining = await totalRemainingByMonth(year, month);
+                    setYearTotalRemainingByMonth(monthRemaining);
+                } else {
+                    setYearTotalRemainingByMonth(null);
+                }
+
+            } finally {
+                setIsLoading(false);
             }
+        };
 
-        }
-        getTotalRemainingByMonth()
+        loadAllData();
+    }, [year, month]);
 
-        const getYearIncome = async () => {
-            let data = await yearIncome(year)
-            setCurrentYearIncome(data)
-        }
-        getYearIncome()
+    // Loading state pendant le chargement initial
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                    <h3 className="text-lg font-medium text-gray-600">Chargement du dashboard...</h3>
+                </div>
+            </div>
+        );
+    }
 
-        const getYearSpent = async () => {
-            let data = await yearSpent(year)
-            setCurrentYearSpent(data)
-        }
-        getYearSpent()
-    }, [year, month])
-
-    if (yearTotalSpent == "")
+    // Message uniquement si pas de données ET chargement terminé
+    if (!hasData) {
         return (
             <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
                 <div className="dashboard_banner p-8 flex flex-col items-center">
@@ -89,7 +96,8 @@ const Dashboard = () => {
                     </a>
                 </div>
             </div>
-    )
+        );
+    }
 
     return (
         <div>
