@@ -55,7 +55,7 @@ const Dashboard = () => {
                 setCurrentYearSpent(yearSpentData);
 
                 // Déterminer s'il y a des données
-                setHasData(spents !== "" && spents !== "0" && spents !== 0);
+                setHasData(yearTotalData !== "" && yearTotalData !== "0" && yearTotalData !== 0);
 
                 // Gestion du mois
                 if (month !== "") {
