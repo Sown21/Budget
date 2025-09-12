@@ -101,21 +101,22 @@ def get_total_income(year: int, user_id: int, db: Session, month: Optional[int] 
     total = query.filter(Spent.category_id.in_(ids_to_keep)).scalar()
     return round(total or 0.0, 2)
 
-def get_total_remaining_by_month(year: int, db: Session, month: int):
+def get_total_remaining_by_month(year: int, user_id: int, db: Session, month: int):
     prev_month = month - 1 if month > 1 else 12
     prev_year = year if month > 1 else year - 1
-    total_spent = get_total_spent(year=year, month=month, db=db)
-    total_income = get_total_income(year=prev_year, month=prev_month, db=db)
+    total_spent = get_total_spent(year=year, user_id=user_id, month=month, db=db)
+    total_income = get_total_income(year=prev_year, user_id=user_id, month=prev_month, db=db)
     remaining = total_income - total_spent
     return round(remaining, 0)
 
-def get_all_years(db: Session):
-    years = db.query(func.extract('year', Spent.date)).distinct().all()
+def get_all_years(user_id: int, db: Session):
+    years = db.query(func.extract('year', Spent.date)).filter(Spent.user_id == user_id).distinct().all()
     return [int(y[0]) for y in years]
 
-def get_total_by_category(year: int, db: Session, month: Optional[int] = None):
+def get_total_by_category(year: int, user_id: int, db: Session, month: Optional[int] = None):
     results = (db.query(Category.name, func.sum(Spent.amount))
                 .join(Spent, Spent.category_id == Category.id)
+                .filter(Spent.user_id == user_id)
                 .filter(func.extract('year', Spent.date) == year)
                 .filter(~Spent.category_id.in_(db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10))))
                )
