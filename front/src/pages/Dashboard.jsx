@@ -40,13 +40,11 @@ const Dashboard = () => {
         const loadAllData = async () => {
             // Ne pas charger si pas d'utilisateur sélectionné
             if (!selectedUserId) {
-                console.log('👤 Dashboard - Aucun utilisateur sélectionné, skip loadAllData');
                 setIsLoading(false);
                 setHasData(false);
                 return;
             }
 
-            console.log('📊 Dashboard - Chargement des données pour user:', selectedUserId, 'year:', year, 'month:', month);
             setIsLoading(true);
             
             try {
@@ -88,8 +86,6 @@ const Dashboard = () => {
 
         loadAllData();
     }, [selectedUserId, year, month]);
-
-    console.log(yearTotalIncome)
 
     if (isLoading) {
         return (

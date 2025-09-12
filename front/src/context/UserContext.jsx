@@ -21,13 +21,11 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     if (selectedUserId) {
       localStorage.setItem('selectedUserId', selectedUserId.toString());
-      console.log('💾 UserContext - Utilisateur sauvegardé:', selectedUserId);
     }
   }, [selectedUserId]);
 
-  // Fonction wrapper pour setSelectedUserId avec log
+  // Fonction wrapper pour setSelectedUserId
   const handleSetSelectedUserId = (userId) => {
-    console.log('📝 UserContext - Changement d\'utilisateur demandé:', userId);
     setSelectedUserId(userId);
   };
 
@@ -35,8 +33,6 @@ export const UserProvider = ({ children }) => {
     selectedUserId,
     setSelectedUserId: handleSetSelectedUserId
   };
-
-  console.log('🏗️ UserContext - Provider rendu avec selectedUserId:', selectedUserId);
 
   return (
     <UserContext.Provider value={value}>
