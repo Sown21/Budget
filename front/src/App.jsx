@@ -3,6 +3,7 @@ import SideBar from './components/SideBar';
 import Dashboard from './pages/Dashboard';
 import Saisis from './pages/Saisis';
 import Categories from './pages/Categories';
+import Users from './pages/Users'
 import { UserProvider } from './context/UserContext';
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -19,6 +20,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/saisis" element={<Saisis />} />
               <Route path="/categories" element={<Categories />} />
+              <Route path="/users" element={<Users />} />
             </Routes>
           </main>
         </div>

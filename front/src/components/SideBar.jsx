@@ -1,6 +1,6 @@
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
-import { MdOutlineSpaceDashboard, MdOutlineTableRows, MdOutlineCategory } from "react-icons/md";
+import { MdOutlineSpaceDashboard, MdOutlineTableRows, MdOutlineCategory, MdOutlineSupervisedUserCircle } from "react-icons/md";
 import UserSelector from "./UserSelector";
 
 const SideBar = () => {
@@ -55,6 +55,20 @@ const SideBar = () => {
                             <div className="flex gap-2 items-center">
                                 <MdOutlineCategory className="text-2xl" />
                                 Catégories
+                            </div>
+                           
+                        </NavLink>
+                    </li>
+                                        <li>
+                        <NavLink
+                            to="/users"
+                            className={({ isActive }) =>
+                                "sidebar-link" + (isActive ? " bg-blue-100 text-blue-600 font-semibold" : "")
+                            }
+                        >
+                            <div className="flex gap-2 items-center">
+                                <MdOutlineSupervisedUserCircle className="text-2xl" />
+                                Utilisateurs
                             </div>
                            
                         </NavLink>
