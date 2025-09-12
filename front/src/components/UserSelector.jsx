@@ -88,26 +88,23 @@ const UserSelector = () => {
 
   return (
     <div className="px-4 py-2 border-t border-gray-200 mt-auto">
-      <div className="mb-2">
-        <label className="block text-xs font-medium text-gray-500 mb-1">
-          Utilisateur: {selectedUserId || 'Aucun'}
-        </label>
+      <div className="mb-2 mt-4">
         <select
           value={selectedUserId || ''}
           onChange={(e) => handleUserChange(parseInt(e.target.value))}
-          className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border-blue-50 bg-blue-100 rounded-2xl px-2 py-2 text-sm font-semibold cursor-pointer shadow-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {users.length === 0 && (
             <option value="">Aucun utilisateur</option>
           )}
           {users.map(user => (
             <option key={user.id} value={user.id}>
-              {user.name} (ID: {user.id})
+              {user.name}
             </option>
           ))}
         </select>
         
-        {selectedUserId && users.length > 1 && (
+        {/* {selectedUserId && users.length > 1 && (
           <button
             onClick={() => handleDeleteUser(selectedUserId)}
             className="mt-1 text-xs text-red-600 hover:text-red-800"
@@ -115,10 +112,10 @@ const UserSelector = () => {
           >
             🗑️ Supprimer
           </button>
-        )}
+        )} */}
       </div>
 
-      {!showCreateForm ? (
+      {/* {!showCreateForm ? (
         <button
           onClick={() => setShowCreateForm(true)}
           className="text-xs text-blue-600 hover:text-blue-800"
@@ -154,7 +151,7 @@ const UserSelector = () => {
             </button>
           </div>
         </form>
-      )}
+      )} */}
     </div>
   );
 };

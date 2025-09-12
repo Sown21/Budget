@@ -14,6 +14,9 @@ const SideBar = () => {
                 </div>
                 <div className="border border-gray-200 my-4"></div>
                 <nav className="flex-1">
+                    <div>
+                        
+                    </div>
                 <ul className="space-y-2">
                     <li>
                         <NavLink
@@ -56,10 +59,9 @@ const SideBar = () => {
                            
                         </NavLink>
                     </li>
-                    <UserSelector />
-
                 </ul>
                 </nav>
+                <UserSelector />
             </aside>
 
         </div>
