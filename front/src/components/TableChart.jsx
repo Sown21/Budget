@@ -1,20 +1,28 @@
 import { useEffect, useState } from 'react';
 import { totalByCategory } from '../api/spents';
 
-const CategoryTable = ({ year, month }) => {
+const CategoryTable = ({ selectedUserId, year, month }) => { 
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await totalByCategory(year, month);
-            const sortedData = result.sort((a, b) => b.total - a.total);
-            const totalAmount = result.reduce((sum, item) => sum + parseFloat(item.total), 0);
-            setData(sortedData);
-            setTotal(totalAmount);
+            // Vérifier que selectedUserId existe
+            if (!selectedUserId || !year) return;
+            
+            try {
+                const result = await totalByCategory(selectedUserId, year, month);
+                const sortedData = result.sort((a, b) => b.total - a.total);
+                const totalAmount = result.reduce((sum, item) => sum + parseFloat(item.total), 0);
+                setData(sortedData);
+                setTotal(totalAmount);
+            } catch (error) {
+                setData([]);
+                setTotal(0);
+            }
         };
         fetchData();
-    }, [year, month]);
+    }, [selectedUserId, year, month]);
 
     const formatCurrency = (value) => {
         const num = parseFloat(value);

@@ -50,34 +50,27 @@ const Dashboard = () => {
             setIsLoading(true);
             
             try {
-                // Passer selectedUserId à toutes les fonctions API
-                const [spents, incomes, remaining, allYearsData, yearIncomeData, yearSpentData] = await Promise.all([
-                    totalSpent(selectedUserId, year, month),
-                    totalIncome(selectedUserId, year, month),
-                    totalRemaining(selectedUserId, year, month),
-                    allYears(selectedUserId),
-                    yearIncome(selectedUserId, year),
-                    yearSpent(selectedUserId, year)
-                ]);
-
-                console.log('✅ Dashboard - Données récupérées:', {
-                    spents, incomes, remaining, 
-                    yearsCount: allYearsData.length,
-                    incomeData: yearIncomeData.length,
-                    spentData: yearSpentData.length
-                });
+                const spents = await totalSpent(selectedUserId, year, month);
+                const spentsYear = await totalSpent(selectedUserId, year);
+                
+                // Valeurs par défaut pour les autres (pour éviter les erreurs)
+                const incomes = await totalIncome(selectedUserId, year, month);
+                const remaining = await totalRemaining(selectedUserId, year, month);
+                const allYearsData = await allYears(selectedUserId);
+                const yearIncomeData = await yearIncome(selectedUserId, year);
+                const yearSpentData = await yearSpent(selectedUserId, year);
 
                 setYearTotalSpent(spents);
                 setYearTotalIncome(incomes);
                 setYearTotalRemaining(remaining);
-                setYears(allYearsData);
+                setYears(allYearsData.length > 0 ? allYearsData : [year]);
                 setCurrentYearIncome(yearIncomeData);
                 setCurrentYearSpent(yearSpentData);
 
-                // Déterminer s'il y a des données
-                setHasData(allYearsData.length > 0 || yearSpentData.length > 0 || yearIncomeData.length > 0);
+                const hasAnyData = (spentsYear && spentsYear > 0);
 
-                // Gestion du mois
+                setHasData(hasAnyData);
+
                 if (month !== "") {
                     const monthRemaining = await totalRemainingByMonth(selectedUserId, year, month);
                     setYearTotalRemainingByMonth(monthRemaining);
@@ -86,7 +79,7 @@ const Dashboard = () => {
                 }
 
             } catch (error) {
-                console.error('❌ Dashboard - Erreur lors du chargement des données:', error);
+                console.error('Dashboard - Erreur lors du chargement des données:', error);
                 setHasData(false);
             } finally {
                 setIsLoading(false);
@@ -94,11 +87,10 @@ const Dashboard = () => {
         };
 
         loadAllData();
-    }, [selectedUserId, year, month]); // Ajouter selectedUserId dans les dépendances
+    }, [selectedUserId, year, month]);
 
-    console.log('🎯 Dashboard - Render:', { selectedUserId, year, month, isLoading, hasData });
+    console.log(yearTotalIncome)
 
-    // Loading state pendant le chargement initial
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen">

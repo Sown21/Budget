@@ -125,18 +125,18 @@ def get_total_by_category(year: int, user_id: int, db: Session, month: Optional[
     results = results.group_by(Category.name).all()
     return [{"category": r[0], "total": r[1]} for r in results]
 
-def get_year_income(year: int, db: Session, month: Optional[int] = None):
+def get_year_income(year: int, user_id: int, db: Session, month: Optional[int] = None):
     ids_to_keep = db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10)).subquery()
-    query = db.query(Spent).filter(func.extract('year', Spent.date) == year)
+    query = db.query(Spent).filter(func.extract('year', Spent.date) == year).filter(Spent.user_id == user_id)
     # if month:
     #     query = query.filter(func.extract('month', Spent.date) == month)
     data = query.filter(Spent.category_id.in_(ids_to_keep)).all()
     return data
 
-def get_year_spent(year: int, db: Session, month: Optional[int] = None):
+def get_year_spent(year: int, user_id: int, db: Session, month: Optional[int] = None):
     ids_to_exclude = db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10)).subquery()
     # query = db.query(func.sum(Spent.amount)).filter(func.extract('year', Spent.date) == year)
-    query = db.query(Spent).filter(func.extract('year', Spent.date) == year)
+    query = db.query(Spent).filter(func.extract('year', Spent.date) == year).filter(Spent.user_id == user_id)
     # if month:
     #     query = query.filter(func.extract('month', Spent.date) == month)
     data = query.filter(~Spent.category_id.in_(ids_to_exclude)).all()

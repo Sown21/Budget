@@ -7,7 +7,7 @@ export const getSpents = async (id) => {
 
 export const postSpents = async (payload) => {
     const response = await instance.post("/spents/", payload);
-    return response.date;
+    return response.data;
 }
 
 export const deleteSpent = async (id) => {
@@ -20,51 +20,51 @@ export const modifySpent = async (id, payload) => {
     return response.data
 }
 
-export const totalSpent = async (year, month) => {
-    let url = `/spents/total/?year=${year}`
+export const totalSpent = async (id, year, month) => {
+    let url = `/spents/total/?year=${year}&user_id=${id}`
     if (month) url += `&month=${month}`
     const response = await instance.get(url)
     return response.data
 }
 
-export const totalIncome = async (year, month) => {
-    let url = `/spents/total/income/?year=${year}`
+export const totalIncome = async (id, year, month) => {
+    let url = `/spents/total/income/?year=${year}&user_id=${id}`
     if (month) url += `&month=${month}`
     const response = await instance.get(url)
     return response.data
 }
 
-export const totalRemaining = async (year, month) => {
-    let url = `/spents/total/remaining/?year=${year}`
+export const totalRemaining = async (id, year, month) => {
+    let url = `/spents/total/remaining/?year=${year}&user_id=${id}`
     if (month) url += `&month=${month}`
     const response = await instance.get(url)
     return response.data
 }
 
-export const totalRemainingByMonth = async (year, month) => {
-    let url = `/spents/total/remaining/month/?year=${year}&month=${month}`
+export const totalRemainingByMonth = async (id, year, month) => {
+    let url = `/spents/total/remaining/month/?year=${year}&month=${month}&user_id=${id}`
     const response = await instance.get(url)
     return response.data
 }
 
-export const allYears = async () => {
-    const response = await instance.get("/spents/all/years/")
+export const allYears = async (id) => {
+    const response = await instance.get(`/spents/all/years/?user_id=${id}`)
     return response.data
 }
 
-export const totalByCategory = async (year, month) => {
-    let url = `/spents/total/by_category/?year=${year}`
+export const totalByCategory = async (id, year, month) => {
+    let url = `/spents/total/by_category/?year=${year}&user_id=${id}`
     if (month) url += `&month=${month}`
     const response = await instance.get(url)
     return response.data
 }
 
-export const yearIncome = async (year) => {
-    const response = await instance.get(`/spents/year/income/?year=${year}`)
+export const yearIncome = async (id, year) => {
+    const response = await instance.get(`/spents/year/income/?year=${year}&user_id=${id}`)
     return response.data
 }
 
-export const yearSpent = async (year) => {
-    const response = await instance.get (`/spents/year/spent/?year=${year}`)
+export const yearSpent = async (id, year) => {
+    const response = await instance.get (`/spents/year/spent/?year=${year}&user_id=${id}`)
     return response.data
 }
