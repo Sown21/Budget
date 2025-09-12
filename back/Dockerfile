@@ -10,4 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8022
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8022", "--workers", "1"]
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+CMD ["/app/start.sh"]
