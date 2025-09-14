@@ -6,7 +6,7 @@ from datetime import datetime
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sqlalchemy.orm import Session
-from sqlalchemy import inspect
+from sqlalchemy import inspect, text
 from core.database import SessionLocal, engine
 from models.user import User
 from models.spent import Spent, Base
@@ -32,7 +32,7 @@ def ensure_column_exists(table_name: str, column_name: str, column_type: str):
     if column_name not in columns:
         print(f"🛠️ Ajout de la colonne '{column_name}' à la table '{table_name}'...")
         with engine.connect() as conn:
-            conn.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type};")
+            conn.execute(text(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type};"))
         print(f"✅ Colonne '{column_name}' ajoutée.")
 
 def run_migrations():
