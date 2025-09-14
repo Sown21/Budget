@@ -25,6 +25,16 @@ def check_table_exists(table_name: str) -> bool:
     inspector = inspect(engine)
     return table_name in inspector.get_table_names()
 
+def ensure_column_exists(table_name: str, column_name: str, column_type: str):
+    """Ajoute la colonne si elle n'existe pas (SQLite only)"""
+    inspector = inspect(engine)
+    columns = [col['name'] for col in inspector.get_columns(table_name)]
+    if column_name not in columns:
+        print(f"🛠️ Ajout de la colonne '{column_name}' à la table '{table_name}'...")
+        with engine.connect() as conn:
+            conn.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type};")
+        print(f"✅ Colonne '{column_name}' ajoutée.")
+
 def run_migrations():
     """Exécute toutes les migrations nécessaires"""
     print("🚀 Début des migrations automatiques...")
@@ -36,7 +46,11 @@ def run_migrations():
         # 1. Créer toutes les tables si elles n'existent pas
         print("📋 Vérification et création des tables...")
         Base.metadata.create_all(bind=engine)
-        
+
+        # Vérifie et ajoute la colonne user_id si besoin
+        if check_table_exists("spents"):
+            ensure_column_exists("spents", "user_id", "INTEGER")
+
         # 2. Créer les catégories par défaut
         print("🏷️ Création des catégories par défaut...")
         create_defaut_categories()
