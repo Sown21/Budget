@@ -11,7 +11,7 @@ export const postSpents = async (payload) => {
 }
 
 export const deleteSpent = async (id) => {
-    const response = await instance.delete(`/spents/?user_id=${id}`)
+    const response = await instance.delete(`/spents/${id}`)
     return response.data
 }
 
