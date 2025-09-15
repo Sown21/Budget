@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import User from "../components/User";
-import { getUsers } from "../api/users";
+import { getUsers, deleteUser } from "../api/users";
 
 const Users = () => {
     const [users, setUsers] = useState([])
     const [showConfirmDelete, setShowConfirmDelete] = useState(false)
     const [userToDelete, setUserToDelete] = useState(null)
+    const [userName, setUserName] = useState("")
 
     useEffect(() => {
         const getAllUsers = async () => {
@@ -22,12 +23,12 @@ const Users = () => {
     const handleDeleteClick = (user) => {
         setUserToDelete(user)
         setShowConfirmDelete(true)
+        setUserName(user.name)
     }
 
     const confirmDelete = async () => {
         try {
-            // Ici vous ajouterez l'appel API pour supprimer l'utilisateur
-            // await deleteUser(userToDelete.id)
+            await deleteUser(userToDelete.id)
             
             // Recharger la liste des utilisateurs
             const data = await getUsers()
@@ -36,8 +37,11 @@ const Users = () => {
             // Fermer la modal
             setShowConfirmDelete(false)
             setUserToDelete(null)
+            toast.success("Utilisateur supprimé !")
         } catch (error) {
             console.error('Erreur lors de la suppression:', error)
+            const errorMessage = error.response?.data?.detail || "Erreur lors de la suppression de l'utilisateur"
+            toast.error(errorMessage)
         }
     }
 
@@ -57,14 +61,16 @@ const Users = () => {
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div className="bg-red-100 p-4 rounded border-blue-100 shadow-lg p-6">
                         <div className="flex justify-center">
-                           <p className="text-lg">Etes vous sûr de vouloir supprimer definitivement la catégorie <span className="font-semibold">sttdt</span> ?</p>
+                           <p className="text-lg">Etes vous sûr de vouloir supprimer l'utilisateur <span className="font-semibold">{userName}</span> ?</p>
                         </div>
-                        <div className="flex gap-2 justify-center">
+                        <div className="flex gap-2 justify-center" onClick={() => {
+                            confirmDelete();
+                        }}>
                             <button className="btn_delete">
                                 Supprimer
                             </button>
                             <button className="btn_form" onClick={() => {
-                                setShowConfirmDelete(false);
+                                cancelDelete();
                             }}>
                                 Annuler
                             </button>

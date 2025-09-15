@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const User = ({ user, onDeleteClick }) => {
     const handleDeleteClick = () => {
-        onDeleteClick(user) // AJOUT: appeler la fonction du parent avec l'utilisateur
+        onDeleteClick(user)
     }
 
     return (

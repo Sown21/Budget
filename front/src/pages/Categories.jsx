@@ -94,7 +94,6 @@ const Categories = () => {
         return "";
     };
 
-    console.log(categoryName)
     return (
         <div className="flex flex-col">
             <h1 className="mt-10 mx-12 text-2xl font-semibold">Mes catégories</h1>
