@@ -47,10 +47,12 @@ const Users = () => {
     }
 
     return (
-        <div className="mx-8 my-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
-            {users.map((user) => (
-                <User key={user.id} user={user} onDeleteClick={handleDeleteClick}/>
-            ))}
+        <div className="p-8 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {users.map((user) => (
+                    <User key={user.id} user={user} onDeleteClick={handleDeleteClick}/>
+                ))}
+            </div>
             { showConfirmDelete && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div className="bg-red-100 p-4 rounded border-blue-100 shadow-lg p-6">
