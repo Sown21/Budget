@@ -10,6 +10,7 @@ const Users = () => {
     const [userToDelete, setUserToDelete] = useState(null)
     const [userName, setUserName] = useState("")
     const [showAddUser, setShowAddUser] = useState(false)
+    const [showUpdate, setShowUpdate] = useState(false)
 
     const { refreshUsers } = useUser()
 
@@ -87,13 +88,18 @@ const Users = () => {
         }
     }
 
+    const handleUpdateUser = () => {
+        setShowUpdate(true)
+
+    }
+
     return (
         <div className="flex flex-col">
             <h1 className="mt-10 mb-5 mx-10 text-2xl font-semibold">Utilisateurs</h1>
             <button className="mx-10 w-96 mb-10 btn_form" onClick={() => setShowAddUser(true)}>Ajouter un utilisateur</button>
             <div className="mx-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {users.map((user) => (
-                    <User key={user.id} user={user} onDeleteClick={handleDeleteClick}/>
+                    <User key={user.id} user={user} onDeleteClick={handleDeleteClick} onUpdateClick={handleUpdateUser}/>
                 ))}
             </div>
             { showConfirmDelete && (
@@ -102,10 +108,10 @@ const Users = () => {
                         <div className="flex justify-center">
                            <p className="text-lg">Etes vous sûr de vouloir supprimer l'utilisateur <span className="font-semibold">{userName}</span> ?</p>
                         </div>
-                        <div className="flex gap-2 justify-center" onClick={() => {
+                        <div className="flex gap-2 justify-center">
+                            <button className="btn_delete" onClick={() => {
                             confirmDelete();
                         }}>
-                            <button className="btn_delete">
                                 Supprimer
                             </button>
                             <button className="btn_form" onClick={() => {
@@ -122,6 +128,22 @@ const Users = () => {
                     <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
                         <label htmlFor="category-name" className="block font-medium text-gray-700 mb-2">
                             Entrez le nom de l'utilisateur à ajouter : 
+                        </label>
+                        <div className="flex justify-center">
+                            <input onChange={e => setUserName(e.target.value)} placeholder="Utilisateur" className="border rounded p-2 bg-white/80 mt-2"></input>
+                        </div>
+                        <div className="flex gap-2 justify-center">
+                            <button className="btn_form" onClick={() => handleAddUser()}>Ajouter</button>
+                            <button className="btn_form" onClick={() => setShowAddUser(false)}>Annuler</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            { showUpdate && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
+                        <label htmlFor="category-name" className="block font-medium text-gray-700 mb-2">
+                            Entrez le nouveau nom d'utilisateur pour {userName} : 
                         </label>
                         <div className="flex justify-center">
                             <input onChange={e => setUserName(e.target.value)} placeholder="Utilisateur" className="border rounded p-2 bg-white/80 mt-2"></input>

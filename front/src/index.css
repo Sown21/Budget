@@ -39,7 +39,7 @@
 }
 
 .dashboard_banner {
-  @apply bg-white py-10 my-4 mx-8 border border-gray-200 rounded shadow-lg
+  @apply bg-white py-10 my-6 mx-8 border border-gray-200 rounded shadow-lg
 }
 
 .banner_selector {

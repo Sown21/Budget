@@ -130,8 +130,8 @@ const Dashboard = () => {
 
     return (
         <div>
-            <h2 className="mx-8 mt-4 text-2xl">Bonjour {activeUser ? activeUser.name : ""}</h2>
-            <div className="flex flex-col gap-4 dashboard_banner shadow_blue">
+            <h2 className="mx-8 mt-4 text-2xl font-semibold">Bonjour {activeUser ? activeUser.name : ""}</h2>
+            <div className="flex flex-col gap-4 dashboard_banner">
                 <div className="flex gap-4 mx-10">
                     <select 
                         className="banner_selector" 
