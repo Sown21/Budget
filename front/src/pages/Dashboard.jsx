@@ -8,7 +8,8 @@ import CategoryTable from "../components/TableChart";
 import { useUser } from "../context/UserContext";
 
 const Dashboard = () => {
-    const { selectedUserId } = useUser();
+    const { users, selectedUserId } = useUser();
+    const activeUser = users.find(u => u.id === selectedUserId);
     const [year, setYear] = useState(new Date().getFullYear());
     const [yearTotalSpent, setYearTotalSpent] = useState("");
     const [yearTotalIncome, setYearTotalIncome] = useState("");
@@ -129,11 +130,9 @@ const Dashboard = () => {
 
     return (
         <div>
+            <h2 className="mx-8 mt-4 text-2xl">Bonjour {activeUser ? activeUser.name : ""}</h2>
             <div className="flex flex-col gap-4 dashboard_banner shadow_blue">
                 <div className="flex gap-4 mx-10">
-                    <div className="text-sm text-gray-600 flex items-center">
-                        Utilisateur ID: {selectedUserId}
-                    </div>
                     <select 
                         className="banner_selector" 
                         value={year} 
