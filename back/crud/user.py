@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from models.user import User
 from schemas.user import UserCreate
 from fastapi import HTTPException
+from sqlalchemy.exc import IntegrityError
 
 def get_users(db: Session):
     return db.query(User).all()
@@ -33,12 +34,17 @@ def delete_user(db: Session, user_id: int):
 def update_user(db: Session, user_id: int, user_data):
     user = db.query(User).filter(User.id == user_id).first()
     if user:
-        update_data = user_data
-        if "name" in update_data:
-            user.name = update_data["name"].strip().capitalize()
-        db.commit()
+        if "name" in user_data:
+            user.name = user_data["name"].strip().capitalize()
+        try:
+            db.commit()
+        except IntegrityError:
+            db.rollback()
+            raise HTTPException(
+                status_code=409,
+                detail="Un utilisateur avec ce nom existe déjà"
+            )
         db.refresh(user)
         return user
     raise HTTPException(status_code=404, detail=f"L'utilisateur {user_id} n'existe pas.")
-    
-    
+

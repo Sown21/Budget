@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import User from "../components/User";
-import { getUsers, deleteUser, createUser } from "../api/users";
+import { getUsers, deleteUser, createUser, updateUser } from "../api/users";
 import { useUser } from "../context/UserContext";
 import { toast } from "react-toastify";
 
@@ -8,6 +8,7 @@ const Users = () => {
     const [users, setUsers] = useState([])
     const [showConfirmDelete, setShowConfirmDelete] = useState(false)
     const [userToDelete, setUserToDelete] = useState(null)
+    const [userToUpdate, setUserToUpdate] = useState(null)
     const [userName, setUserName] = useState("")
     const [showAddUser, setShowAddUser] = useState(false)
     const [showUpdate, setShowUpdate] = useState(false)
@@ -88,9 +89,37 @@ const Users = () => {
         }
     }
 
-    const handleUpdateUser = () => {
+    const handleUpdateClick = (user) => {
+        setUserToUpdate(user)
         setShowUpdate(true)
+    }
 
+    const handleUpdateUser = async () => {
+        try {
+            await updateUser(userToUpdate.id, { name: userName });
+
+            const data = await getUsers()
+            setUsers(data)
+
+            await refreshUsers();
+
+            setUserToUpdate(null)
+            setShowUpdate(false)
+            toast.success("Nom d'utilisateur modifié !")
+        } catch (error) {
+            setShowUpdate(false)
+            let errorMessage = "Erreur lors de la modification du nom de l'utilisateur";
+            if (error.response?.data?.detail) {
+                if (Array.isArray(error.response.data.detail)) {
+                    errorMessage = error.response.data.detail.map(e => e.msg).join(', ');
+                } else {
+                    errorMessage = error.response.data.detail;
+                }
+            }
+            toast.error(errorMessage);
+            // Fermer la modal après un petit délai pour laisser le toast s'afficher
+            setTimeout(() => setShowUpdate(false), 300);
+        }
     }
 
     return (
@@ -99,7 +128,7 @@ const Users = () => {
             <button className="mx-10 w-96 mb-10 btn_form" onClick={() => setShowAddUser(true)}>Ajouter un utilisateur</button>
             <div className="mx-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {users.map((user) => (
-                    <User key={user.id} user={user} onDeleteClick={handleDeleteClick} onUpdateClick={handleUpdateUser}/>
+                    <User key={user.id} user={user} onDeleteClick={handleDeleteClick} onUpdateClick={handleUpdateClick}/>
                 ))}
             </div>
             { showConfirmDelete && (
@@ -143,14 +172,14 @@ const Users = () => {
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
                         <label htmlFor="category-name" className="block font-medium text-gray-700 mb-2">
-                            Entrez le nouveau nom d'utilisateur pour {userName} : 
+                            Entrez le nouveau nom d'utilisateur : 
                         </label>
                         <div className="flex justify-center">
                             <input onChange={e => setUserName(e.target.value)} placeholder="Utilisateur" className="border rounded p-2 bg-white/80 mt-2"></input>
                         </div>
                         <div className="flex gap-2 justify-center">
-                            <button className="btn_form" onClick={() => handleAddUser()}>Ajouter</button>
-                            <button className="btn_form" onClick={() => setShowAddUser(false)}>Annuler</button>
+                            <button className="btn_form" onClick={() => handleUpdateUser()}>Modifier</button>
+                            <button className="btn_form" onClick={() => setShowUpdate(false)}>Annuler</button>
                         </div>
                     </div>
                 </div>
