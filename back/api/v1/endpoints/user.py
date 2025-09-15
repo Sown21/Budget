@@ -18,3 +18,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 @router.delete("/{user_id}")
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     return crud_user.delete_user(db=db, user_id=user_id)
+
+@router.put("/{user_id}")
+def update_user(user_id: int, user_data: dict, db: Session = Depends(get_db)):
+    return crud_user.update_user(db=db, user_id=user_id, user_data=user_data)
