@@ -88,9 +88,10 @@ const Users = () => {
     }
 
     return (
-        <div className="p-8 w-full">
-            <button className="btn_form" onClick={() => setShowAddUser(true)}>Ajouter un utilisateur</button>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="flex flex-col">
+            <h1 className="mt-10 mb-5 mx-10 text-2xl font-semibold">Utilisateurs</h1>
+            <button className="mx-10 w-96 mb-10 btn_form" onClick={() => setShowAddUser(true)}>Ajouter un utilisateur</button>
+            <div className="mx-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {users.map((user) => (
                     <User key={user.id} user={user} onDeleteClick={handleDeleteClick}/>
                 ))}
