@@ -47,7 +47,7 @@ const Users = () => {
     }
 
     return (
-        <div className="mx-8 my-2 grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-6">
+        <div className="mx-8 my-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
             {users.map((user) => (
                 <User key={user.id} user={user} onDeleteClick={handleDeleteClick}/>
             ))}
