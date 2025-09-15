@@ -4,8 +4,7 @@ import { useUser } from '../context/UserContext';
 
 const UserSelector = () => {
   // Utiliser le contexte au lieu des props
-  const { selectedUserId, setSelectedUserId } = useUser();
-  const [users, setUsers] = useState([]);
+  const { users, selectedUserId, setSelectedUserId, refreshUsers } = useUser();
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newUserName, setNewUserName] = useState('');
@@ -17,8 +16,8 @@ const UserSelector = () => {
   const fetchUsers = async () => {
     try {
       const usersData = await getUsers();
-      setUsers(usersData);
-      
+      refreshUsers(usersData);
+
       // Si aucun utilisateur n'est sélectionné, prendre le premier par défaut
       if (!selectedUserId && usersData.length > 0) {
         setSelectedUserId(usersData[0].id);
@@ -40,7 +39,7 @@ const UserSelector = () => {
 
     try {
       const newUser = await createUser({ name: newUserName.trim() });
-      setUsers([...users, newUser]);
+      refreshUsers([...users, newUser]);
       setNewUserName('');
       setShowCreateForm(false);
       setSelectedUserId(newUser.id);
@@ -63,8 +62,8 @@ const UserSelector = () => {
     try {
       await deleteUser(userId);
       const updatedUsers = users.filter(user => user.id !== userId);
-      setUsers(updatedUsers);
-      
+      refreshUsers(updatedUsers);
+
       // Si l'utilisateur supprimé était sélectionné, sélectionner le premier disponible
       if (selectedUserId === userId && updatedUsers.length > 0) {
         setSelectedUserId(updatedUsers[0].id);

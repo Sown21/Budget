@@ -11,4 +11,13 @@ const instance = axios.create({
     },
 })
 
+// AJOUT: Intercepteur pour gérer automatiquement les erreurs
+instance.interceptors.response.use(
+    (response) => response, // Succès : retourne la response
+    (error) => {
+        console.error('❌ Axios error:', error.response?.data);
+        return Promise.reject(error); // Rejette automatiquement les erreurs
+    }
+);
+
 export default instance;
