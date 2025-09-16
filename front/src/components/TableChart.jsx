@@ -43,25 +43,25 @@ const CategoryTable = ({ selectedUserId, year, month }) => {
             <h3 className="text-lg font-semibold mb-4">Dépenses par catégorie</h3>
             <div className="space-y-3">
                 {data.map((item, index) => (
-                    <div key={index} className="flex items-center justify-between">
-                        <div className="flex items-center flex-1">
+                    <div key={index} className="flex flex-wrap items-center justify-between">
+                        <div className="flex items-center flex-1 min-w-0">
                             <div className={`w-3 h-3 rounded-full ${colors[index % colors.length]} mr-3`}></div>
-                            <span className="font-medium text-gray-700 min-w-0 flex-1">
+                            <span className="font-medium text-gray-700 min-w-0 flex-1 truncate">
                                 {item.category}
                             </span>
                         </div>
-                        <div className="flex items-center ml-4">
+                        <div className="flex items-center ml-4 min-w-0">
                             {/* Barre de progression */}
-                            <div className="w-20 bg-gray-200 rounded-full h-2 mr-3">
+                            <div className="w-16 sm:w-20 bg-gray-200 rounded-full h-2 mr-3 flex-shrink-0">
                                 <div 
                                     className={`h-2 rounded-full ${colors[index % colors.length]}`}
                                     style={{ width: `${getPercentage(item.total)}%` }}
                                 ></div>
                             </div>
-                            <span className="text-sm text-gray-500 w-12 text-right">
+                            <span className="text-sm text-gray-500 w-10 sm:w-12 text-right flex-shrink-0">
                                 {getPercentage(item.total)}%
                             </span>
-                            <span className="font-semibold text-gray-900 w-20 text-right">
+                            <span className="font-semibold text-gray-900 w-16 sm:w-20 text-right flex-shrink-0">
                                 {formatCurrency(item.total)}
                             </span>
                         </div>
