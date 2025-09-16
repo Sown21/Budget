@@ -162,7 +162,7 @@ const Users = () => {
                             <input onChange={e => setUserName(e.target.value)} placeholder="Utilisateur" className="border rounded p-2 bg-white/80 mt-2"></input>
                         </div>
                         <div className="flex gap-2 justify-center">
-                            <button className="btn_form" onClick={() => handleAddUser()}>Ajouter</button>
+                            <button className="btn_form_apply" onClick={() => handleAddUser()}>Ajouter</button>
                             <button className="btn_form" onClick={() => setShowAddUser(false)}>Annuler</button>
                         </div>
                     </div>
@@ -178,7 +178,7 @@ const Users = () => {
                             <input onChange={e => setUserName(e.target.value)} placeholder="Utilisateur" className="border rounded p-2 bg-white/80 mt-2"></input>
                         </div>
                         <div className="flex gap-2 justify-center">
-                            <button className="btn_form" onClick={() => handleUpdateUser()}>Modifier</button>
+                            <button className="btn_form_apply" onClick={() => handleUpdateUser()}>Modifier</button>
                             <button className="btn_form" onClick={() => setShowUpdate(false)}>Annuler</button>
                         </div>
                     </div>

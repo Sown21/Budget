@@ -133,7 +133,7 @@ const Categories = () => {
                             <input onChange={e => setCategoryName(e.target.value)} placeholder="Catégorie" className="border rounded p-2 bg-white/80 mt-2"></input>
                         </div>
                         <div className="flex gap-2 justify-center">
-                            <button className="btn_form" onClick={() => handleAddCategory()}>Ajouter</button>
+                            <button className="btn_form_apply" onClick={() => handleAddCategory()}>Ajouter</button>
                             <button className="btn_form" onClick={() => setShowAddCategory(false)}>Annuler</button>
                         </div>
                     </div>
@@ -155,7 +155,7 @@ const Categories = () => {
                             <input onChange={e => setSubCategoryName(e.target.value)} placeholder="Sous Catégorie" className="border rounded p-2 bg-white/80 my-2"></input>
                         </div>
                         <div className="flex gap-2 justify-center">
-                            <button className="btn_form" onClick={() => handleAddSubCategory()}>Ajouter</button>
+                            <button className="btn_form_apply" onClick={() => handleAddSubCategory()}>Ajouter</button>
                             <button className="btn_form" onClick={() => { setShowAddSubCategory(false), setSubCategoryName(""), setParentId(null)}}>Annuler</button>
                         </div>
                     </div>
@@ -255,7 +255,7 @@ const Categories = () => {
                             <input onChange={e => setCategoryName(e.target.value)} placeholder="Nouveau nom" className="border rounded p-2 bg-white/80 mt-2"></input>
                         </div>
                         <div className="flex gap-2 justify-center">
-                            <button className="btn_form" onClick={() => {handleUpdateCategory()}}>
+                            <button className="btn_form_apply" onClick={() => {handleUpdateCategory()}}>
                                 Modifier
                             </button>
                             <button className="btn_form" onClick={() => {
