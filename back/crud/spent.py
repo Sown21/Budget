@@ -141,3 +141,20 @@ def get_year_spent(year: int, user_id: int, db: Session, month: Optional[int] = 
     #     query = query.filter(func.extract('month', Spent.date) == month)
     data = query.filter(~Spent.category_id.in_(ids_to_exclude)).all()
     return data
+
+def compare_prev_month_spents(user_id: int, year: int, month: int, db: Session):
+    use_year = year if month > 1 else year - 1
+    actual_month = get_total_spent(year, user_id, db, month)
+    prev_month = get_total_spent(use_year, user_id, db, month - 1)
+    if prev_month == 0:
+        return None
+    result = round(((actual_month - prev_month) / prev_month) * 100)
+    return result
+
+def compare_prev_year_spents(user_id: int, year: int, db: Session):
+    actual_year = get_total_spent(year, user_id, db)
+    prev_year = get_total_spent(year - 1, user_id, db)
+    if prev_year == 0:
+        return None
+    result = round(((actual_year - prev_year) / prev_year) * 100)
+    return result
