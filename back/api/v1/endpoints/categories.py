@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from crud import categories as crud_categories
 from schemas.spent import CategoryRead
-from schemas.categories import CategoryCreate, SubCategoryCreate
+from schemas.categories import CategoryCreate, SubCategoryCreate, CategoryUpdate
 from api.deps import get_db
 
 router = APIRouter()
@@ -27,3 +27,7 @@ def create_sub_category(category: SubCategoryCreate, db: Session = Depends(get_d
 @router.delete("/del")
 def delete_category(category_id: int, db: Session = Depends(get_db)):
     return crud_categories.delete_category(category_id=category_id, db=db)
+
+@router.put("/update")
+def update_category(category_id: int, category_data: CategoryUpdate, db: Session = Depends(get_db)):
+    return crud_categories.update_category(category_id=category_id, category_data=category_data, db=db)

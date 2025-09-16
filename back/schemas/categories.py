@@ -7,3 +7,7 @@ class CategoryCreate(BaseModel):
 class SubCategoryCreate(BaseModel):
     name: str
     parent_id: int
+
+class CategoryUpdate(BaseModel):
+    name: str
+    parent_id: int = None

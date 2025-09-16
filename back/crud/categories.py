@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session, selectinload
 from models.spent import Category, Spent
-from schemas.categories import CategoryCreate, SubCategoryCreate
+from schemas.categories import CategoryCreate, SubCategoryCreate, CategoryUpdate
 from sqlalchemy.exc import SQLAlchemyError
 
 def get_categories(db: Session):
@@ -46,4 +46,19 @@ def delete_category(category_id: int, db: Session):
         return True
     except SQLAlchemyError as e:
         db.rollback()       
+        raise e
+    
+def update_category(category_id: int, category_data: CategoryUpdate, db: Session):
+    try:
+        category = db.query(Category).filter(Category.id == category_id).first()
+        if category:
+            update_data = category_data.model_dump(exclude_unset=True)
+            for field, value in update_data.items():
+                if field == "parent_id":
+                    continue
+                setattr(category, field, value)
+            db.commit()
+            db.refresh(category)
+            return category
+    except SQLAlchemyError as e:
         raise e
