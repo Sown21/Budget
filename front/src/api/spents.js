@@ -1,3 +1,4 @@
+import { UserProvider } from "../context/UserContext";
 import instance from "./axios"
 
 export const getSpents = async (id) => {
@@ -65,6 +66,11 @@ export const yearIncome = async (id, year) => {
 }
 
 export const yearSpent = async (id, year) => {
-    const response = await instance.get (`/spents/year/spent/?year=${year}&user_id=${id}`)
+    const response = await instance.get(`/spents/year/spent/?year=${year}&user_id=${id}`)
+    return response.data
+}
+
+export const compareMonthSpent = async (userId, year, month) => {
+    const response = await instance.get(`/spents/compare/month?user_id=${userId}&year=${year}&month=${month}`)
     return response.data
 }

@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent } from "../api/spents";
+import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent, compareMonthSpent } from "../api/spents";
 import { LuPiggyBank } from "react-icons/lu";
 import { TbMoneybag } from "react-icons/tb";
 import { GiPayMoney, GiMoneyStack } from "react-icons/gi";
 import CustomLineChart from "../components/LineChart";
 import CategoryTable from "../components/TableChart";
 import { useUser } from "../context/UserContext";
+import { FaArrowTrendDown, FaArrowTrendUp } from "react-icons/fa6";
 
 const Dashboard = () => {
     const { users, selectedUserId } = useUser();
@@ -21,6 +22,7 @@ const Dashboard = () => {
     const [currentYearSpent, setCurrentYearSpent] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [hasData, setHasData] = useState(false);
+    const [monthPercentSpents, setMonthPercentSpents] = useState(null)
     
     const months = [
         { value: 1, label: "Janvier" },
@@ -47,9 +49,15 @@ const Dashboard = () => {
             }
 
             setIsLoading(true);
+
+            let percentSpents = null
             
             try {
                 const spents = await totalSpent(selectedUserId, year, month);
+                if (month) {
+                    percentSpents = await compareMonthSpent(selectedUserId, year, month)   
+                    console.log(percentSpents)
+                };   
                 const spentsYear = await totalSpent(selectedUserId, year);
                 
                 // Valeurs par défaut pour les autres (pour éviter les erreurs)
@@ -60,6 +68,7 @@ const Dashboard = () => {
                 const yearSpentData = await yearSpent(selectedUserId, year);
 
                 setYearTotalSpent(spents);
+                setMonthPercentSpents(percentSpents);
                 setYearTotalIncome(incomes);
                 setYearTotalRemaining(remaining);
                 setYears(allYearsData.length > 0 ? allYearsData : [year]);
@@ -162,7 +171,10 @@ const Dashboard = () => {
                                 <TbMoneybag className="text-2xl text-white" />
                             </div>
                         </div>
-                        <p className="font-semibold">{yearTotalIncome}€</p>
+                        <div className="flex justify-between items-end">
+                            <p className="font-semibold">{yearTotalIncome}€</p>
+                        </div>
+
                     </div>
                     
                     <div className="budget_card border-purple-100 bg-purple-100">
@@ -172,7 +184,22 @@ const Dashboard = () => {
                                 <GiPayMoney className="text-2xl text-white" />
                             </div>
                         </div>
-                        <p className="font-semibold">{yearTotalSpent} €</p>
+                        <div className="flex justify-between items-end">
+                            <p className="font-semibold">{yearTotalSpent} €</p>
+                            {month && monthPercentSpents !== null && monthPercentSpents !== 0 && (
+                                monthPercentSpents < 0 ? (
+                                    <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
+                                        <FaArrowTrendDown />
+                                        <p>{monthPercentSpents}%</p>
+                                    </div>
+                                ) : (
+                                    <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
+                                        <FaArrowTrendUp />
+                                        <p>{monthPercentSpents}%</p>
+                                    </div>
+                                )
+                            )}
+                        </div>
                     </div>
                     
                     {month && (
