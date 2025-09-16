@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { getCategories, addCategory, addSubCategory, delCategory } from "../api/categories";
+import { getCategories, addCategory, addSubCategory, delCategory, updateCategory } from "../api/categories";
 import Category from "../components/Category";
 import { toast } from 'react-toastify';
+import { toFormData } from "axios";
 
 const Categories = () => {
     const [ categories, setCategories ] = useState([])
@@ -13,6 +14,7 @@ const Categories = () => {
     const [ showDelCategory, setShowDelCategory] = useState(false)
     const [ categoryId, setCategoryId ] = useState(null)
     const [ showConfirmDelete, setShowConfirmDelete ] = useState(false)
+    const [ showUpdateCategory, setShowUpdateCategory ] = useState(false)
 
     useEffect(() => {
         const getAllCategorie = async () => {
@@ -76,6 +78,22 @@ const Categories = () => {
         }
     }
 
+    const handleUpdateCategory = async () => {
+        try {
+            const payload = { name: categoryName }
+            await updateCategory(categoryId, payload)
+            let data = await getCategories()
+            setCategories(data)
+            setShowUpdateCategory(false)
+            setCategoryId(null)
+            setCategoryName("")
+            toast.success("Catégorie modifiée avec succès !")
+        } catch (error) {
+            const errorMessage = error.response?.data?.detail ||"Erreur lors de la modification de la catégorie"
+            toast.error(errorMessage)
+        }
+    }
+
     const getCategoryNameById = (id) => {
         // Chercher dans les catégories principales
         for (let cat of categories) {
@@ -101,6 +119,7 @@ const Categories = () => {
                 <div className="flex gap-2">
                     <button className="btn_form" onClick={() => setShowAddCategory(true)}>Ajouter une catégorie</button>
                     <button className="btn_form" onClick={() => setShowAddSubCategory(true)}>Ajouter une sous-catégorie</button>
+                    <button className="btn_form" onClick={() => setShowUpdateCategory(true)}>Modifier une catégorie</button>
                 </div>
                 <button className="btn_delete" onClick={() => setShowDelCategory(true)}>Supprimer une catégorie</button>
             </div>
@@ -199,6 +218,49 @@ const Categories = () => {
                                 setShowConfirmDelete(false);
                                 setCategoryId(null);
                                 setCategoryName("")
+                            }}>
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            { showUpdateCategory && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6 backdrop-blur">
+                        <label className="block font-medium text-gray-700 mb-2">
+                            Sélectionnez la catégorie à modifier
+                        </label>
+                        <div className="flex justify-center items-start">
+                            <select className="p-2 border rounded bg-white/80 my-2" onChange={e => { 
+                                const selectedId = e.target.value;
+                                setCategoryId(selectedId);
+                                setCategoryName(getCategoryNameById(selectedId));
+                            }}>
+                                <option value="">-- Choisir une catégorie --</option>
+                                    {categories.map((cat) => (
+                                        <React.Fragment key={cat.id}>
+                                            {/* Catégorie principale */}
+                                            <option value={cat.id}>{cat.name}</option>
+                                            
+                                            {/* Sous-catégories avec indentation */}
+                                            {cat.children && cat.children.map((child) => (
+                                                <option key={child.id} value={child.id}>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;└─ {child.name}
+                                                </option>
+                                            ))}
+                                        </React.Fragment>
+                                    ))}
+                            </select>
+                            <input onChange={e => setCategoryName(e.target.value)} placeholder="Nouveau nom" className="border rounded p-2 bg-white/80 mt-2"></input>
+                        </div>
+                        <div className="flex gap-2 justify-center">
+                            <button className="btn_form" onClick={() => {handleUpdateCategory()}}>
+                                Modifier
+                            </button>
+                            <button className="btn_form" onClick={() => {
+                                setShowUpdateCategory(false);
+                                setCategoryId(null);
                             }}>
                                 Annuler
                             </button>

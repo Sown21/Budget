@@ -19,3 +19,8 @@ export const delCategory = async (category_id) => {
     const response = await instance.delete(`/categories/del/?category_id=${category_id}`)
     return response.data
 }
+
+export const updateCategory = async (category_id, payload) => {
+    const response = await instance.put(`/categories/update?category_id=${category_id}`, payload)
+    return response.data
+}
