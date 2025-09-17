@@ -74,3 +74,18 @@ export const compareMonthSpent = async (userId, year, month) => {
     const response = await instance.get(`/spents/compare/month?user_id=${userId}&year=${year}&month=${month}`)
     return response.data
 }
+
+export const compareYearSpent = async (userId, year) => {
+    const response = await instance.get(`/spents/compare/year?user_id=${userId}&year=${year}`)
+    return response.data
+}
+
+export const compareMonthIncome = async (userId, year, month) => {
+    const response = await instance.get(`/spents/compare/income/month?user_id=${userId}&year=${year}&month=${month}`)
+    return response.data
+}
+
+export const compareYearIncome = async (userId, year) => {
+    const response = await instance.get(`/spents/compare/income/year?user_id=${userId}&year=${year}`)
+    return response.data
+}

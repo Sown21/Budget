@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent, compareMonthSpent, compareYearSpent } from "../api/spents";
+import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent, compareMonthSpent, compareYearSpent, compareMonthIncome, compareYearIncome } from "../api/spents";
 import { LuPiggyBank } from "react-icons/lu";
 import { TbMoneybag } from "react-icons/tb";
 import { GiPayMoney, GiMoneyStack } from "react-icons/gi";
@@ -24,6 +24,8 @@ const Dashboard = () => {
     const [hasData, setHasData] = useState(false);
     const [monthPercentSpents, setMonthPercentSpents] = useState(null)
     const [yearPercentSpents, setYearPercentSpents] = useState(null)
+    const [monthPercentIncome, setMonthPercentIncome] = useState(null)
+    const [yearPercentIncome, setYearPercentIncome] = useState(null)
     
     const months = [
         { value: 1, label: "Janvier" },
@@ -52,15 +54,19 @@ const Dashboard = () => {
             setIsLoading(true);
 
             let percentSpents = null
-            let percentYear = null
+            let percentYearSpents = null
+            let percentIncome = null
+            let percentYearIncome = null
             
             try {
                 const spents = await totalSpent(selectedUserId, year, month);
                 if (month) {
                     percentSpents = await compareMonthSpent(selectedUserId, year, month)   
+                    percentIncome = await compareMonthIncome(selectedUserId, year, month)
                 }
                 if (!month) {
-                    percentYear = await compareYearSpent(selectedUserId, year)
+                    percentYearSpents = await compareYearSpent(selectedUserId, year)
+                    percentYearIncome = await compareYearIncome(selectedUserId, year)
                 }   
                 const spentsYear = await totalSpent(selectedUserId, year);
                 
@@ -73,7 +79,9 @@ const Dashboard = () => {
 
                 setYearTotalSpent(spents);
                 setMonthPercentSpents(percentSpents);
-                setYearPercentSpents(percentYear);
+                setYearPercentSpents(percentYearSpents);
+                setMonthPercentIncome(percentIncome);
+                setYearPercentIncome(percentYearIncome)
                 setYearTotalIncome(incomes);
                 setYearTotalRemaining(remaining);
                 setYears(allYearsData.length > 0 ? allYearsData : [year]);
@@ -178,6 +186,32 @@ const Dashboard = () => {
                         </div>
                         <div className="flex justify-between items-end">
                             <p className="font-semibold">{yearTotalIncome}€</p>
+                            {month && monthPercentIncome !== null && monthPercentIncome !== 0 && (
+                                monthPercentIncome > 0 ? (
+                                    <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
+                                        <FaArrowTrendUp />
+                                        <p>{monthPercentIncome}%</p>
+                                    </div>
+                                ) : (
+                                    <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
+                                        <FaArrowTrendDown />
+                                        <p>{monthPercentIncome}%</p>
+                                    </div>
+                                )
+                            )}
+                            {!month && yearPercentIncome !== null && yearPercentIncome !== 0 && (
+                                yearPercentIncome > 0 ? (
+                                    <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
+                                        <FaArrowTrendUp />
+                                        <p>{yearPercentIncome}%</p>
+                                    </div>
+                                ) : (
+                                    <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
+                                        <FaArrowTrendDown />
+                                        <p>{yearPercentIncome}%</p>
+                                    </div>
+                                )
+                            )}
                         </div>
 
                     </div>
