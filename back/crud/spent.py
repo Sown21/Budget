@@ -190,3 +190,11 @@ def compare_remaining_month(user_id: int, year: int, month: int, db: Session):
         return None
     result = round (((actual_remaining - prev_remaining) / prev_remaining) * 100)
     return result
+
+def compare_remaining_year(user_id: int, year: int, db: Session):
+    actual_remaining = get_total_remaining(year, user_id, db)
+    prev_remaining = get_total_remaining(year - 1, user_id, db)
+    if prev_remaining == 0:
+        return None
+    result = round(((actual_remaining - prev_remaining) / prev_remaining) * 100)
+    return result

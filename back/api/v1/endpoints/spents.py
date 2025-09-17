@@ -93,3 +93,7 @@ def compare_prev_year_income(user_id: int, year: int, db: Session = Depends(get_
 @router.get("/compare/remaining/month")
 def compare_remaining_month(user_id: int, year: int, month: int, db: Session = Depends(get_db)):
     return crud_spent.compare_remaining_month(user_id=user_id, year=year, month=month, db=db)
+
+@router.get("/compare/remaining/year")
+def compare_remaining_year(user_id: int, year: int, db: Session = Depends(get_db)):
+    return crud_spent.compare_remaining_year(user_id=user_id, year=year, db=db)
