@@ -181,3 +181,12 @@ def compare_prev_year_income(user_id: int, year: int, db: Session):
         return None
     result = round(((actual_year - prev_year) / prev_year) * 100)
     return result
+
+def compare_remaining_month(user_id: int, year: int, month: int, db: Session):
+    use_year = year if month > 1 else year - 1
+    actual_remaining = get_total_remaining_by_month(year, user_id, db, month)
+    prev_remaining = get_total_remaining_by_month(use_year, user_id, db, month - 1)
+    if prev_remaining == 0 or actual_remaining == 0:
+        return None
+    result = round (((actual_remaining - prev_remaining) / prev_remaining) * 100)
+    return result
