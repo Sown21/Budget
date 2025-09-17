@@ -94,3 +94,8 @@ export const compareMonthRemaining = async (userId, year, month) => {
     const response = await instance.get(`/spents/compare/remaining/month?user_id=${userId}&year=${year}&month=${month}`)
     return response.data
 }
+
+export const compareYearRemaining = async (userId, year) => {
+    const response = await instance.get(`/spents/compare/remaining/year?user_id=${userId}&year=${year}`)
+    return response.data
+}
