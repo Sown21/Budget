@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent, compareMonthSpent, compareYearSpent, compareMonthIncome, compareYearIncome } from "../api/spents";
+import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent, compareMonthSpent, compareYearSpent, compareMonthIncome, compareYearIncome, compareMonthRemaining } from "../api/spents";
 import { LuPiggyBank } from "react-icons/lu";
 import { TbMoneybag } from "react-icons/tb";
 import { GiPayMoney, GiMoneyStack } from "react-icons/gi";
@@ -26,6 +26,7 @@ const Dashboard = () => {
     const [yearPercentSpents, setYearPercentSpents] = useState(null)
     const [monthPercentIncome, setMonthPercentIncome] = useState(null)
     const [yearPercentIncome, setYearPercentIncome] = useState(null)
+    const [monthPercentRemaining, setMonthPercentRemaining] = useState(null)
     
     const months = [
         { value: 1, label: "Janvier" },
@@ -57,12 +58,14 @@ const Dashboard = () => {
             let percentYearSpents = null
             let percentIncome = null
             let percentYearIncome = null
+            let percentRemaining = null
             
             try {
                 const spents = await totalSpent(selectedUserId, year, month);
                 if (month) {
                     percentSpents = await compareMonthSpent(selectedUserId, year, month)   
                     percentIncome = await compareMonthIncome(selectedUserId, year, month)
+                    percentRemaining = await compareMonthRemaining(selectedUserId, year, month)
                 }
                 if (!month) {
                     percentYearSpents = await compareYearSpent(selectedUserId, year)
@@ -82,6 +85,7 @@ const Dashboard = () => {
                 setYearPercentSpents(percentYearSpents);
                 setMonthPercentIncome(percentIncome);
                 setYearPercentIncome(percentYearIncome)
+                setMonthPercentRemaining(percentRemaining);
                 setYearTotalIncome(incomes);
                 setYearTotalRemaining(remaining);
                 setYears(allYearsData.length > 0 ? allYearsData : [year]);
@@ -262,7 +266,22 @@ const Dashboard = () => {
                                     <GiMoneyStack className="text-2xl text-white" />
                                 </div>
                             </div>
-                            <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
+                            <div className="flex justify-between items-end">
+                                <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
+                                {monthPercentRemaining !== null && monthPercentRemaining !== 0 && (
+                                    monthPercentSpents < 0 ? (
+                                        <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
+                                            <FaArrowTrendDown />
+                                            <p>{monthPercentRemaining}%</p>
+                                        </div>
+                                    ) : (
+                                        <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
+                                            <FaArrowTrendUp />
+                                            <p>{monthPercentRemaining}%</p>
+                                        </div>
+                                    )
+                                )}
+                            </div>
                         </div>
                     )}
                     {!month && (
