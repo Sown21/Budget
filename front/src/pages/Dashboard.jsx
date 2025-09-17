@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent, compareMonthSpent } from "../api/spents";
+import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent, compareMonthSpent, compareYearSpent } from "../api/spents";
 import { LuPiggyBank } from "react-icons/lu";
 import { TbMoneybag } from "react-icons/tb";
 import { GiPayMoney, GiMoneyStack } from "react-icons/gi";
@@ -23,6 +23,7 @@ const Dashboard = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [hasData, setHasData] = useState(false);
     const [monthPercentSpents, setMonthPercentSpents] = useState(null)
+    const [yearPercentSpents, setYearPercentSpents] = useState(null)
     
     const months = [
         { value: 1, label: "Janvier" },
@@ -51,13 +52,16 @@ const Dashboard = () => {
             setIsLoading(true);
 
             let percentSpents = null
+            let percentYear = null
             
             try {
                 const spents = await totalSpent(selectedUserId, year, month);
                 if (month) {
                     percentSpents = await compareMonthSpent(selectedUserId, year, month)   
-                    console.log(percentSpents)
-                };   
+                }
+                if (!month) {
+                    percentYear = await compareYearSpent(selectedUserId, year)
+                }   
                 const spentsYear = await totalSpent(selectedUserId, year);
                 
                 // Valeurs par défaut pour les autres (pour éviter les erreurs)
@@ -69,6 +73,7 @@ const Dashboard = () => {
 
                 setYearTotalSpent(spents);
                 setMonthPercentSpents(percentSpents);
+                setYearPercentSpents(percentYear);
                 setYearTotalIncome(incomes);
                 setYearTotalRemaining(remaining);
                 setYears(allYearsData.length > 0 ? allYearsData : [year]);
@@ -199,6 +204,19 @@ const Dashboard = () => {
                                     </div>
                                 )
                             )}
+                            {!month && yearPercentSpents !== null && yearPercentSpents !== 0 && (
+                                yearPercentSpents < 0 ? (
+                                    <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
+                                        <FaArrowTrendDown />
+                                        <p>{yearPercentSpents}%</p>
+                                    </div>
+                                ) : (
+                                    <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
+                                        <FaArrowTrendUp />
+                                        <p>{yearPercentSpents}%</p>
+                                    </div>
+                                )
+                            )}
                         </div>
                     </div>
                     
@@ -213,20 +231,19 @@ const Dashboard = () => {
                             <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
                         </div>
                     )}
-                    
-                    <div className="budget_card border-orange-100 bg-orange-100">
-                        <div className="flex gap-8">
-                            <h2>Capital restant</h2>
-                            <div className="border border-orange-200 rounded-lg bg-orange-500 p-1.5">
-                                <LuPiggyBank className="text-2xl text-white" />
+                    {!month && (
+                        <div className="budget_card border-orange-100 bg-orange-100">
+                            <div className="flex gap-8">
+                                <h2>Capital restant</h2>
+                                <div className="border border-orange-200 rounded-lg bg-orange-500 p-1.5">
+                                    <LuPiggyBank className="text-2xl text-white" />
+                                </div>
                             </div>
+                            <p className="font-semibold">{yearTotalRemaining}€</p>
                         </div>
-                        <p className="font-semibold">{yearTotalRemaining}€</p>
-                    </div>
+                    )}
                 </div>
             </div>
-            
-            {/* Flexbox avec items-start pour alignment en haut */}
             <div className="flex flex-col lg:flex-row gap-8 mt-8 mx-8 items-start">
                 <div className="flex-1 min-w-0">
                     <CategoryTable 
