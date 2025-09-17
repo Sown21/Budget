@@ -1,10 +1,13 @@
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import func, or_
 from models.spent import Spent, Category
+from models.user import User
 from schemas.spent import SpentCreate, SpentUpdate
-from fastapi import HTTPException
+from fastapi import HTTPException, Response
 from typing import Optional, List
 from datetime import date
+import csv
+from io import StringIO
 
 def get_spent(db: Session, spent_id: int):
     return db.query(Spent).filter(Spent.id == spent_id).first()
@@ -198,3 +201,17 @@ def compare_remaining_year(user_id: int, year: int, db: Session):
         return None
     result = round(((actual_remaining - prev_remaining) / prev_remaining) * 100)
     return result
+
+def export_spents_csv(user_id: int, db: Session):
+    timestamp = date.today()
+    print(timestamp)
+    user = db.query(User).filter(User.id == user_id).first()
+    spents = db.query(Spent).filter(Spent.user_id == user_id).all()
+    output = StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["id", "name", "amount", "description", "category_id", "date"])
+    for spent in spents:
+        writer.writerow([spent.id, spent.name, spent.amount, spent.description, spent.category_id, spent.date])
+    response = Response(content=output.getvalue(), media_type="text/csv")
+    response.headers["Content-Disposition"] = f"attachment; filename={user.name}_{timestamp}.csv"
+    return response

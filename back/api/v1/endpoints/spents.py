@@ -97,3 +97,7 @@ def compare_remaining_month(user_id: int, year: int, month: int, db: Session = D
 @router.get("/compare/remaining/year")
 def compare_remaining_year(user_id: int, year: int, db: Session = Depends(get_db)):
     return crud_spent.compare_remaining_year(user_id=user_id, year=year, db=db)
+
+@router.get("/export")
+def export_spents_csv(user_id: int, db: Session = Depends(get_db)):
+    return crud_spent.export_spents_csv(user_id=user_id, db=db)
