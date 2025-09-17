@@ -101,6 +101,12 @@ def get_total_income(year: int, user_id: int, db: Session, month: Optional[int] 
     total = query.filter(Spent.category_id.in_(ids_to_keep)).scalar()
     return round(total or 0.0, 2)
 
+def get_total_remaining(year: int, user_id: int, db: Session):
+    incomes = get_total_income(year, user_id, db)
+    spents = get_total_spent(year, user_id, db)
+    total = round(incomes - spents, 2)
+    return total
+
 def get_total_remaining_by_month(year: int, user_id: int, db: Session, month: int):
     prev_month = month - 1 if month > 1 else 12
     prev_year = year if month > 1 else year - 1
@@ -146,7 +152,7 @@ def compare_prev_month_spents(user_id: int, year: int, month: int, db: Session):
     use_year = year if month > 1 else year - 1
     actual_month = get_total_spent(year, user_id, db, month)
     prev_month = get_total_spent(use_year, user_id, db, month - 1)
-    if prev_month == 0:
+    if prev_month == 0 or actual_month == 0:
         return None
     result = round(((actual_month - prev_month) / prev_month) * 100)
     return result
