@@ -99,3 +99,8 @@ export const compareYearRemaining = async (userId, year) => {
     const response = await instance.get(`/spents/compare/remaining/year?user_id=${userId}&year=${year}`)
     return response.data
 }
+
+export const exportCsv = async (userId) => {
+    const response = await instance.get(`/spents/export?user_id=${userId}`, {responseType: 'blob'})
+    return response
+}

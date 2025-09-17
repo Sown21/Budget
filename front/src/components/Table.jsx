@@ -5,7 +5,7 @@ import { useState } from "react"
 const Table = ({ data, onDelete, onModify, idToModify }) => {
 
     return (
-        <div className="rounded-lg shadow overflow-hidden mx-8 my-8">
+        <div className="rounded-lg shadow overflow-hidden mx-8 my-1">
             <div className="max-h-96 overflow-auto pb-10">
                 <table className="min-w-full border border-gray-300">
                 <thead>

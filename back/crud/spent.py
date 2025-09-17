@@ -204,7 +204,6 @@ def compare_remaining_year(user_id: int, year: int, db: Session):
 
 def export_spents_csv(user_id: int, db: Session):
     timestamp = date.today()
-    print(timestamp)
     user = db.query(User).filter(User.id == user_id).first()
     spents = db.query(Spent).filter(Spent.user_id == user_id).all()
     output = StringIO()
@@ -213,5 +212,5 @@ def export_spents_csv(user_id: int, db: Session):
     for spent in spents:
         writer.writerow([spent.id, spent.name, spent.amount, spent.description, spent.category_id, spent.date])
     response = Response(content=output.getvalue(), media_type="text/csv")
-    response.headers["Content-Disposition"] = f"attachment; filename={user.name}_{timestamp}.csv"
+    response.headers["Content-Disposition"] = f'attachment; filename="export_budget_{user.name}_{timestamp}.csv"'
     return response

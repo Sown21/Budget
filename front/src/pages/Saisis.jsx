@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import SpentForm from "../components/SpentForm";
 import { toast } from 'react-toastify';
 import { useUser } from "../context/UserContext";
+import ExportButton from "../components/ExportButton";
 
 const Saisis = () => {
     const { selectedUserId } = useUser();
@@ -124,6 +125,7 @@ const Saisis = () => {
             toast.error(errorMessage);
         }
     };
+    console.log(selectedUserId)
 
     // État de chargement
     if (loading) {
@@ -160,12 +162,19 @@ const Saisis = () => {
                     submitLabel="Ajouter"
                 />
             </div>
-            <Table 
-                data={data}
-                onDelete={handleDelete}
-                onModify={handleModifyClick}
-                idToModify={idToModify}
-            />
+            <div className="flex flex-col">
+                <div className="flex justify-end mx-15">
+                    <ExportButton userId={selectedUserId} />
+                </div>
+                
+                <Table 
+                    data={data}
+                    onDelete={handleDelete}
+                    onModify={handleModifyClick}
+                    idToModify={idToModify}
+                />
+            </div>
+
 
             {/* Modale de confirmation de suppression */}
             {showDeleteConfirm && (
