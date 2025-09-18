@@ -3,9 +3,9 @@ from sqlalchemy import func, or_
 from models.spent import Spent, Category
 from models.user import User
 from schemas.spent import SpentCreate, SpentUpdate
-from fastapi import HTTPException, Response
+from fastapi import HTTPException, Response, UploadFile
 from typing import Optional, List
-from datetime import date
+from datetime import date, datetime
 import csv
 from io import StringIO
 
@@ -214,3 +214,21 @@ def export_spents_csv(user_id: int, db: Session):
     response = Response(content=output.getvalue(), media_type="text/csv")
     response.headers["Content-Disposition"] = f'attachment; filename="export_budget_{user.name}_{timestamp}.csv"'
     return response
+
+async def import_spents_csv(user_id: int, db: Session, file: UploadFile):
+    content = await file.read()
+    csvfile = StringIO(content.decode())
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        spent = Spent(
+            id=row["id"],
+            name=row["name"],
+            amount=row["amount"],
+            description=row["description"],
+            category_id=row["category_id"],
+            date=datetime.strptime(row["date"], "%Y-%m-%d").date(),
+            user_id=user_id
+        )
+        db.add(spent)
+    db.commit()
+    return {"status": "success"}

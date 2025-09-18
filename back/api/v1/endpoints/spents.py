@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from crud import spent as crud_spent
@@ -101,3 +101,7 @@ def compare_remaining_year(user_id: int, year: int, db: Session = Depends(get_db
 @router.get("/export")
 def export_spents_csv(user_id: int, db: Session = Depends(get_db)):
     return crud_spent.export_spents_csv(user_id=user_id, db=db)
+
+@router.post("/import")
+async def import_spents_csv(user_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
+    return await crud_spent.import_spents_csv(user_id=user_id, file=file, db=db)
