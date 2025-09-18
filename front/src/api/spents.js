@@ -104,3 +104,12 @@ export const exportCsv = async (userId) => {
     const response = await instance.get(`/spents/export?user_id=${userId}`, {responseType: 'blob'})
     return response
 }
+
+export const importCsv = async (userId, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await instance.post(`/spents/import?user_id=${userId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+    });
+    return response;
+}

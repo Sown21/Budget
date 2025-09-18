@@ -6,6 +6,7 @@ import SpentForm from "../components/SpentForm";
 import { toast } from 'react-toastify';
 import { useUser } from "../context/UserContext";
 import ExportButton from "../components/ExportButton";
+import ImportButton from "../components/ImportButton";
 
 const Saisis = () => {
     const { selectedUserId } = useUser();
@@ -125,7 +126,6 @@ const Saisis = () => {
             toast.error(errorMessage);
         }
     };
-    console.log(selectedUserId)
 
     // État de chargement
     if (loading) {
@@ -163,7 +163,12 @@ const Saisis = () => {
                 />
             </div>
             <div className="flex flex-col">
-                <div className="flex justify-end mx-15">
+                <div className="flex justify-end mx-15 gap-2">
+                    <ImportButton userId={selectedUserId} onSuccess={async () => {
+                        const spents = await getSpents(selectedUserId);
+                        spents.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        setData(spents);
+                    }} />
                     <ExportButton userId={selectedUserId} />
                 </div>
                 
