@@ -48,6 +48,11 @@ export const totalRemainingByMonth = async (id, year, month) => {
     return response.data
 }
 
+export const getCapital = async (userId) => {
+    const response = await instance.get(`/spents/total/remaining/all/?user_id=${userId}`)
+    return response.data
+}
+
 export const allYears = async (id) => {
     const response = await instance.get(`/spents/all/years/?user_id=${id}`)
     return response.data

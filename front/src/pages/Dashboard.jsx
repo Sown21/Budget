@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { totalSpent, totalIncome, totalRemaining, allYears, totalRemainingByMonth, yearIncome, yearSpent, compareMonthSpent, compareYearSpent, compareMonthIncome, compareYearIncome, compareMonthRemaining, compareYearRemaining } from "../api/spents";
+import { totalSpent, totalIncome, totalRemaining, getCapital, allYears, totalRemainingByMonth, yearIncome, yearSpent, compareMonthSpent, compareYearSpent, compareMonthIncome, compareYearIncome, compareMonthRemaining, compareYearRemaining } from "../api/spents";
 import { LuPiggyBank } from "react-icons/lu";
 import { TbMoneybag } from "react-icons/tb";
 import { GiPayMoney, GiMoneyStack } from "react-icons/gi";
+import { AiOutlineGold } from "react-icons/ai";
 import CustomLineChart from "../components/LineChart";
 import CategoryTable from "../components/TableChart";
 import { useUser } from "../context/UserContext";
@@ -16,6 +17,7 @@ const Dashboard = () => {
     const [yearTotalIncome, setYearTotalIncome] = useState("");
     const [yearTotalRemaining, setYearTotalRemaining] = useState("");
     const [yearTotalRemainingByMonth, setYearTotalRemainingByMonth] = useState("");
+    const [capital, setCapital] = useState("")
     const [years, setYears] = useState([]);
     const [month, setMonth] = useState("");
     const [currentYearIncome, setCurrentYearIncome] = useState([]);
@@ -79,6 +81,7 @@ const Dashboard = () => {
                 // Valeurs par défaut pour les autres (pour éviter les erreurs)
                 const incomes = await totalIncome(selectedUserId, year, month);
                 const remaining = await totalRemaining(selectedUserId, year, month);
+                const userCapital = await getCapital(selectedUserId);
                 const allYearsData = await allYears(selectedUserId);
                 const yearIncomeData = await yearIncome(selectedUserId, year);
                 const yearSpentData = await yearSpent(selectedUserId, year);
@@ -92,6 +95,7 @@ const Dashboard = () => {
                 setYearPercentRemaining(percentYearRemaining);
                 setYearTotalIncome(incomes);
                 setYearTotalRemaining(remaining);
+                setCapital(userCapital);
                 setYears(allYearsData.length > 0 ? allYearsData : [year]);
                 setCurrentYearIncome(yearIncomeData);
                 setCurrentYearSpent(yearSpentData);
@@ -184,136 +188,145 @@ const Dashboard = () => {
                     </select>
                 </div>
                 
-                <div className="flex gap-8 mx-10 mt-6">
-                    <div className="budget_card border-yellow-100 bg-yellow-100">
-                        <div className="flex gap-8">
-                            <h2>Revenue total</h2>
-                            <div className="border border-yellow-200 rounded-lg bg-yellow-500 p-1.5">
-                                <TbMoneybag className="text-2xl text-white" />
-                            </div>
-                        </div>
-                        <div className="flex justify-between items-end">
-                            <p className="font-semibold">{yearTotalIncome}€</p>
-                            {month && monthPercentIncome !== null && monthPercentIncome !== 0 && (
-                                monthPercentIncome > 0 ? (
-                                    <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
-                                        <FaArrowTrendUp />
-                                        <p>{monthPercentIncome}%</p>
-                                    </div>
-                                ) : (
-                                    <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
-                                        <FaArrowTrendDown />
-                                        <p>{monthPercentIncome}%</p>
-                                    </div>
-                                )
-                            )}
-                            {!month && yearPercentIncome !== null && yearPercentIncome !== 0 && (
-                                yearPercentIncome > 0 ? (
-                                    <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
-                                        <FaArrowTrendUp />
-                                        <p>{yearPercentIncome}%</p>
-                                    </div>
-                                ) : (
-                                    <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
-                                        <FaArrowTrendDown />
-                                        <p>{yearPercentIncome}%</p>
-                                    </div>
-                                )
-                            )}
-                        </div>
-
-                    </div>
-                    
-                    <div className="budget_card border-purple-100 bg-purple-100">
-                        <div className="flex gap-8">
-                            <h2>Total dépensé</h2>
-                            <div className="border border-purple-200 rounded-lg bg-purple-500 p-1.5">
-                                <GiPayMoney className="text-2xl text-white" />
-                            </div>
-                        </div>
-                        <div className="flex justify-between items-end">
-                            <p className="font-semibold">{yearTotalSpent} €</p>
-                            {month && monthPercentSpents !== null && monthPercentSpents !== 0 && (
-                                monthPercentSpents < 0 ? (
-                                    <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
-                                        <FaArrowTrendDown />
-                                        <p>{monthPercentSpents}%</p>
-                                    </div>
-                                ) : (
-                                    <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
-                                        <FaArrowTrendUp />
-                                        <p>{monthPercentSpents}%</p>
-                                    </div>
-                                )
-                            )}
-                            {!month && yearPercentSpents !== null && yearPercentSpents !== 0 && (
-                                yearPercentSpents < 0 ? (
-                                    <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
-                                        <FaArrowTrendDown />
-                                        <p>{yearPercentSpents}%</p>
-                                    </div>
-                                ) : (
-                                    <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
-                                        <FaArrowTrendUp />
-                                        <p>{yearPercentSpents}%</p>
-                                    </div>
-                                )
-                            )}
-                        </div>
-                    </div>
-                    
-                    {month && (
-                        <div className="budget_card border-blue-100 bg-blue-100">
+                <div className="flex justify-between">
+                    <div className="flex gap-8 mx-10 mt-6">
+                        <div className="budget_card border-yellow-100 bg-yellow-100">
                             <div className="flex gap-8">
-                                <h2>Restant pour le mois</h2>
-                                <div className="border border-blue-200 rounded-lg bg-blue-500 p-1.5">
-                                    <GiMoneyStack className="text-2xl text-white" />
+                                <h2>Revenue total</h2>
+                                <div className="border border-yellow-200 rounded-lg bg-yellow-500 p-1.5">
+                                    <TbMoneybag className="text-2xl text-white" />
                                 </div>
                             </div>
                             <div className="flex justify-between items-end">
-                                <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
-                                {monthPercentRemaining !== null && monthPercentRemaining !== 0 && (
+                                <p className="font-semibold">{yearTotalIncome}€</p>
+                                {month && monthPercentIncome !== null && monthPercentIncome !== 0 && (
+                                    monthPercentIncome > 0 ? (
+                                        <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
+                                            <FaArrowTrendUp />
+                                            <p>{monthPercentIncome}%</p>
+                                        </div>
+                                    ) : (
+                                        <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
+                                            <FaArrowTrendDown />
+                                            <p>{monthPercentIncome}%</p>
+                                        </div>
+                                    )
+                                )}
+                                {!month && yearPercentIncome !== null && yearPercentIncome !== 0 && (
+                                    yearPercentIncome > 0 ? (
+                                        <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
+                                            <FaArrowTrendUp />
+                                            <p>{yearPercentIncome}%</p>
+                                        </div>
+                                    ) : (
+                                        <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
+                                            <FaArrowTrendDown />
+                                            <p>{yearPercentIncome}%</p>
+                                        </div>
+                                    )
+                                )}
+                            </div>
+                        </div>       
+                        <div className="budget_card border-purple-100 bg-purple-100">
+                            <div className="flex gap-8">
+                                <h2>Total dépensé</h2>
+                                <div className="border border-purple-200 rounded-lg bg-purple-500 p-1.5">
+                                    <GiPayMoney className="text-2xl text-white" />
+                                </div>
+                            </div>
+                            <div className="flex justify-between items-end">
+                                <p className="font-semibold">{yearTotalSpent} €</p>
+                                {month && monthPercentSpents !== null && monthPercentSpents !== 0 && (
                                     monthPercentSpents < 0 ? (
-                                        <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
+                                        <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
                                             <FaArrowTrendDown />
-                                            <p>{monthPercentRemaining}%</p>
+                                            <p>{monthPercentSpents}%</p>
                                         </div>
                                     ) : (
-                                        <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
+                                        <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
                                             <FaArrowTrendUp />
-                                            <p>{monthPercentRemaining}%</p>
+                                            <p>{monthPercentSpents}%</p>
+                                        </div>
+                                    )
+                                )}
+                                {!month && yearPercentSpents !== null && yearPercentSpents !== 0 && (
+                                    yearPercentSpents < 0 ? (
+                                        <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
+                                            <FaArrowTrendDown />
+                                            <p>{yearPercentSpents}%</p>
+                                        </div>
+                                    ) : (
+                                        <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
+                                            <FaArrowTrendUp />
+                                            <p>{yearPercentSpents}%</p>
                                         </div>
                                     )
                                 )}
                             </div>
                         </div>
-                    )}
-                    {!month && (
-                        <div className="budget_card border-orange-100 bg-orange-100">
-                            <div className="flex gap-8">
-                                <h2>Capital restant</h2>
-                                <div className="border border-orange-200 rounded-lg bg-orange-500 p-1.5">
-                                    <LuPiggyBank className="text-2xl text-white" />
+                        
+                        {month && (
+                            <div className="budget_card border-blue-100 bg-blue-100">
+                                <div className="flex gap-8">
+                                    <h2>Restant pour le mois</h2>
+                                    <div className="border border-blue-200 rounded-lg bg-blue-500 p-1.5">
+                                        <GiMoneyStack className="text-2xl text-white" />
+                                    </div>
+                                </div>
+                                <div className="flex justify-between items-end">
+                                    <p className="font-semibold">{yearTotalRemainingByMonth}€</p>
+                                    {monthPercentRemaining !== null && monthPercentRemaining !== 0 && (
+                                        monthPercentSpents < 0 ? (
+                                            <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
+                                                <FaArrowTrendDown />
+                                                <p>{monthPercentRemaining}%</p>
+                                            </div>
+                                        ) : (
+                                            <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
+                                                <FaArrowTrendUp />
+                                                <p>{monthPercentRemaining}%</p>
+                                            </div>
+                                        )
+                                    )}
                                 </div>
                             </div>
-                            <div className="flex justify-between items-end">
-                                <p className="font-semibold">{yearTotalRemaining}€</p>
-                                {yearPercentRemaining !== null && yearPercentRemaining !== 0 && (
-                                    yearPercentSpents > 0 ? (
-                                        <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
-                                            <FaArrowTrendDown />
-                                            <p>{yearPercentRemaining}%</p>
-                                        </div>
-                                    ) : (
-                                        <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
-                                            <FaArrowTrendUp />
-                                            <p>{yearPercentRemaining}%</p>
-                                        </div>
-                                    )
-                                )}
+                        )}
+                        {!month && (
+                            <div className="budget_card border-orange-100 bg-orange-100">
+                                <div className="flex gap-8">
+                                    <h2>Capital restant</h2>
+                                    <div className="border border-orange-200 rounded-lg bg-orange-500 p-1.5">
+                                        <LuPiggyBank className="text-2xl text-white" />
+                                    </div>
+                                </div>
+                                <div className="flex justify-between items-end">
+                                    <p className="font-semibold">{yearTotalRemaining}€</p>
+                                    {yearPercentRemaining !== null && yearPercentRemaining !== 0 && (
+                                        yearPercentSpents > 0 ? (
+                                            <div className="flex gap-2 items-center text-sm text-red-500 font-semibold">
+                                                <FaArrowTrendDown />
+                                                <p>{yearPercentRemaining}%</p>
+                                            </div>
+                                        ) : (
+                                            <div className="flex gap-2 items-center text-sm text-green-500 font-semibold">
+                                                <FaArrowTrendUp />
+                                                <p>{yearPercentRemaining}%</p>
+                                            </div>
+                                        )
+                                    )}
+                                </div>
                             </div>
+                        )}
+                        <div className="budget_card border-green-100 bg-green-100">
+                            <div className="flex gap-8">
+                                <h2>Capital Total</h2>
+                                <div className="border border-green-200 rounded-lg bg-green-500 p-1.5">
+                                    <AiOutlineGold className="text-2xl text-white" />
+                                </div>
+                            </div>
+                            <p className="font-semibold">{capital}€</p>
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
             <div className="flex flex-col lg:flex-row gap-8 mt-8 mx-8 items-start">

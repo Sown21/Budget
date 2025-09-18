@@ -104,7 +104,7 @@ def get_total_income(year: int, user_id: int, db: Session, month: Optional[int] 
     total = query.filter(Spent.category_id.in_(ids_to_keep)).scalar()
     return round(total or 0.0, 2)
 
-def get_total_remaining(year: int, user_id: int, db: Session):
+def get_total_remaining_per_year(year: int, user_id: int, db: Session):
     incomes = get_total_income(year, user_id, db)
     spents = get_total_spent(year, user_id, db)
     total = round(incomes - spents, 2)
@@ -117,6 +117,16 @@ def get_total_remaining_by_month(year: int, user_id: int, db: Session, month: in
     total_income = get_total_income(year=prev_year, user_id=user_id, month=prev_month, db=db)
     remaining = total_income - total_spent
     return round(remaining, 0)
+
+def get_total_remaining_all(user_id: int, db: Session):
+    ids_incomes = db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10)).subquery()
+    query_incomes = db.query(func.sum(Spent.amount)).filter(Spent.user_id == user_id)
+    incomes = query_incomes.filter(Spent.category_id.in_(ids_incomes)).scalar()
+    ids_spents = db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10)).subquery()
+    query_spents = db.query(func.sum(Spent.amount)).filter(Spent.user_id == user_id)
+    spents = query_spents.filter(~Spent.category_id.in_(ids_spents)).scalar()
+    total = incomes - spents
+    return round(total or 0.0, 2)
 
 def get_all_years(user_id: int, db: Session):
     years = db.query(func.extract('year', Spent.date)).filter(Spent.user_id == user_id).distinct().all()
@@ -195,8 +205,8 @@ def compare_remaining_month(user_id: int, year: int, month: int, db: Session):
     return result
 
 def compare_remaining_year(user_id: int, year: int, db: Session):
-    actual_remaining = get_total_remaining(year, user_id, db)
-    prev_remaining = get_total_remaining(year - 1, user_id, db)
+    actual_remaining = get_total_remaining_per_year(year, user_id, db)
+    prev_remaining = get_total_remaining_per_year(year - 1, user_id, db)
     if prev_remaining == 0:
         return None
     result = round(((actual_remaining - prev_remaining) / prev_remaining) * 100)
