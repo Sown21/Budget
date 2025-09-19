@@ -8,6 +8,7 @@ import CustomLineChart from "../components/LineChart";
 import CategoryTable from "../components/TableChart";
 import { useUser } from "../context/UserContext";
 import { FaArrowTrendDown, FaArrowTrendUp } from "react-icons/fa6";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
     const { users, selectedUserId } = useUser();
@@ -23,6 +24,7 @@ const Dashboard = () => {
     const [currentYearIncome, setCurrentYearIncome] = useState([]);
     const [currentYearSpent, setCurrentYearSpent] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
     const [hasData, setHasData] = useState(false);
     const [monthPercentSpents, setMonthPercentSpents] = useState(null)
     const [yearPercentSpents, setYearPercentSpents] = useState(null)
@@ -113,6 +115,7 @@ const Dashboard = () => {
 
             } catch (error) {
                 console.error('Dashboard - Erreur lors du chargement des données:', error);
+                setLoadError(true);
                 setHasData(false);
             } finally {
                 setIsLoading(false);
@@ -121,6 +124,17 @@ const Dashboard = () => {
 
         loadAllData();
     }, [selectedUserId, year, month]);
+
+    if (loadError) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="dashboard_banner p-8 flex flex-col items-center">
+                    <h3 className="text-xl font-semibold mb-4 text-red-600">Erreur lors du chargement des données</h3>
+                    <p className="text-gray-600 mb-4">Veuillez réessayer plus tard ou contacter l’administrateur.</p>
+                </div>
+            </div>
+        );
+    }
 
     if (isLoading) {
         return (
