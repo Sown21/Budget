@@ -130,7 +130,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-center min-h-screen">
                 <div className="dashboard_banner p-8 flex flex-col items-center">
                     <h3 className="text-xl font-semibold mb-4 text-red-600">Erreur lors du chargement des données</h3>
-                    <p className="text-gray-600 mb-4">Veuillez réessayer plus tard ou contacter l’administrateur.</p>
+                    <p className="text-gray-600 mb-4">Veuillez réessayer plus tard ou contacter l'administrateur.</p>
                 </div>
             </div>
         );
