@@ -11,6 +11,7 @@ ENV/
 
 # SQLite DB
 *.db
+database.db.backup.*
 
 # Config et variables d'environnement
 *.env

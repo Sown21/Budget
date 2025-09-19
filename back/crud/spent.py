@@ -125,7 +125,7 @@ def get_total_remaining_all(user_id: int, db: Session):
     ids_spents = db.query(Category.id).filter(or_(Category.id == 10, Category.parent_id == 10)).subquery()
     query_spents = db.query(func.sum(Spent.amount)).filter(Spent.user_id == user_id)
     spents = query_spents.filter(~Spent.category_id.in_(ids_spents)).scalar()
-    total = incomes - spents
+    total = (incomes or 0) - (spents or 0)
     return round(total or 0.0, 2)
 
 def get_all_years(user_id: int, db: Session):
