@@ -21,7 +21,7 @@
 }
 
 .saisie_bg {
-  @apply min-h-screen bg-gray-50 py-1
+  @apply min-h-screen py-1
 }
 
 .saisie_card {
