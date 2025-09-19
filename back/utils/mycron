@@ -1,0 +1,1 @@
+* * * * * /usr/local/bin/python3 /app/utils/export_data.py >> /app/data/exports/cron_output.log 2>&1

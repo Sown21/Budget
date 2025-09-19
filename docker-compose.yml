@@ -14,3 +14,5 @@ services:
     ports: 
       - "8022:8022"
     restart: always
+    volumes:
+      - /home/vagrant/Budget/back/data/:/app/data/

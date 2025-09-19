@@ -9,6 +9,8 @@ python core/migrate.py
 # Vérifier que les migrations ont réussi
 if [ $? -eq 0 ]; then
     echo "✅ Migrations terminées avec succès"
+
+    cron
     
     # Démarrer l'application
     echo "🌟 Démarrage du serveur FastAPI..."
