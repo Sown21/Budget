@@ -3,6 +3,7 @@ import { getCategories, addCategory, addSubCategory, delCategory, updateCategory
 import Category from "../components/Category";
 import { toast } from 'react-toastify';
 import { toFormData } from "axios";
+import { motion } from "framer-motion";
 
 const Categories = () => {
     const [ categories, setCategories ] = useState([])
@@ -112,6 +113,20 @@ const Categories = () => {
         return "";
     };
 
+    const cardStagger = {
+        hidden: {},
+        visible: {
+            transition: {
+                staggerChildren: 0.08
+            }
+        }
+    };
+
+    const cardVariant = {
+        hidden: { opacity: 0, y: 40 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+    };
+
     return (
         <div className="flex flex-col">
             <h1 className="mt-10 mx-12 text-2xl font-semibold">Mes catégories</h1>
@@ -124,8 +139,20 @@ const Categories = () => {
                 <button className="btn_delete" onClick={() => setShowDelCategory(true)}>Supprimer une catégorie</button>
             </div>
             { showAddCategory && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
+                <motion.div
+                    className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.8, opacity: 0 }}
+                        transition={{ duration: 0.18 }}
+                        className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6"
+                    >
                         <label htmlFor="category-name" className="block font-medium text-gray-700 mb-2">
                             Entrez la catégorie à ajouter : 
                         </label>
@@ -136,12 +163,24 @@ const Categories = () => {
                             <button className="btn_form_apply" onClick={() => handleAddCategory()}>Ajouter</button>
                             <button className="btn_form" onClick={() => setShowAddCategory(false)}>Annuler</button>
                         </div>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             )}
             { showAddSubCategory && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6">
+                <motion.div
+                    className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.8, opacity: 0 }}
+                        transition={{ duration: 0.18 }}
+                        className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6"
+                    >
                         <label htmlFor="category-name" className="block font-medium text-gray-700 mb-2">
                             Séléctionez la catégorie principale et entrez le nom de la sous catégorie 
                         </label>
@@ -158,12 +197,24 @@ const Categories = () => {
                             <button className="btn_form_apply" onClick={() => handleAddSubCategory()}>Ajouter</button>
                             <button className="btn_form" onClick={() => { setShowAddSubCategory(false), setSubCategoryName(""), setParentId(null)}}>Annuler</button>
                         </div>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             )}
             { showDelCategory && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="bg-red-100 p-4 rounded border-blue-100 shadow-lg p-6 backdrop-blur">
+                <motion.div
+                    className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.8, opacity: 0 }}
+                        transition={{ duration: 0.18 }}
+                        className="bg-red-100 p-4 rounded border-blue-100 shadow-lg p-6 backdrop-blur"
+                    >
                         <label className="block font-medium text-gray-700 mb-2">
                             Sélectionnez la catégorie à supprimer
                         </label>
@@ -200,12 +251,24 @@ const Categories = () => {
                                 Annuler
                             </button>
                         </div>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             )}
             { showConfirmDelete && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="bg-red-100 p-4 rounded border-blue-100 shadow-lg p-6">
+                <motion.div
+                    className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.8, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="bg-red-100 p-4 rounded border-blue-100 shadow-lg p-6"
+                    >
                         <div className="flex justify-center">
                            <p className="text-lg">Etes vous sûr de vouloir supprimer definitivement la catégorie <span className="font-semibold">{categoryName}</span> ?</p>
                         </div>
@@ -222,12 +285,24 @@ const Categories = () => {
                                 Annuler
                             </button>
                         </div>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             )}
             { showUpdateCategory && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6 backdrop-blur">
+                <motion.div
+                    className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.18 }}
+                >
+                    <motion.div
+                        initial={{ scale: 0.6, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.8, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="bg-blue-200 p-4 rounded border-blue-100 shadow-lg p-6 backdrop-blur"
+                    >
                         <label className="block font-medium text-gray-700 mb-2">
                             Sélectionnez la catégorie à modifier
                         </label>
@@ -265,14 +340,22 @@ const Categories = () => {
                                 Annuler
                             </button>
                         </div>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             )}
-            <div className="mx-8 my-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            <motion.div
+                key={categories.map(c => c.id).join("-")}
+                className="mx-8 my-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6"
+                variants={cardStagger}
+                initial="hidden"
+                animate="visible"
+            >
                 {categories.map((category) => (
-                    <Category key={category.id} category={category} />
+                    <motion.div key={category.id} variants={cardVariant}>
+                        <Category category={category} />
+                    </motion.div>
                 ))}
-            </div>
+            </motion.div>
         </div>
     )
 }

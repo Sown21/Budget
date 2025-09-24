@@ -1,6 +1,6 @@
 const Category = ({ category }) => {
     return (
-        <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-xl hover:scale-105 hover:shadow-lg transition-all duration-200 min-h-[200px] flex flex-col">
+        <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-xl hover:scale-105 hover:shadow-lg transition-all duration-200 min-h-[200px] flex flex-col h-full">
             <h3 className="font-bold text-xl mb-4">{category.name}</h3>
             
             <div className="flex-1"> {/* Prend l'espace restant */}

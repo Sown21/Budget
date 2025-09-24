@@ -9,6 +9,7 @@ import CategoryTable from "../components/TableChart";
 import { useUser } from "../context/UserContext";
 import { FaArrowTrendDown, FaArrowTrendUp } from "react-icons/fa6";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 const Dashboard = () => {
     const { users, selectedUserId } = useUser();
@@ -177,10 +178,21 @@ const Dashboard = () => {
     }
 
     return (
-        <div>
-            <h2 className="mx-8 mt-4 text-2xl font-semibold">Bonjour {activeUser ? activeUser.name : ""}</h2>
+        <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+            <h2 className="mx-8 mt-4 text-2xl font-semibold">
+                Bonjour {activeUser ? activeUser.name : ""}
+            </h2>
             <div className="flex flex-col gap-4 dashboard_banner">
-                <div className="flex gap-4 mx-10">
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="flex gap-4 mx-10"
+                >
                     <select 
                         className="banner_selector" 
                         value={year} 
@@ -200,9 +212,13 @@ const Dashboard = () => {
                             <option key={m.value} value={m.value}>{m.label}</option>
                         ))}  
                     </select>
-                </div>
-                
-                <div className="flex justify-between">
+                </motion.div>
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="flex justify-between"
+                >
                     <div className="flex gap-8 mx-10 mt-6">
                         <div className="budget_card border-yellow-100 bg-yellow-100">
                             <div className="flex gap-8">
@@ -341,9 +357,14 @@ const Dashboard = () => {
                             <p className="font-semibold">{capital}€</p>
                         </div>
                     </div>
-                </div>
+                </motion.div>
             </div>
-            <div className="flex flex-col lg:flex-row gap-8 mt-8 mx-8 items-start">
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="flex flex-col lg:flex-row gap-8 mt-8 mx-8 items-start"
+            >
                 <div className="flex-1 min-w-0">
                     <CategoryTable 
                         year={year} 
@@ -357,8 +378,8 @@ const Dashboard = () => {
                         data_spent={currentYearSpent ? currentYearSpent : []} 
                     />
                 </div>
-            </div>     
-        </div>
+            </motion.div>     
+        </motion.div>
     );
 };
 
