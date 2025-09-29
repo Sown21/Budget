@@ -36,11 +36,10 @@ def get_spents(
     if amount_max is not None:
         query = query.filter(Spent.amount <= amount_max)
     if search:
-        search_lower = search.lower()
         query = query.filter(
             or_(
-                func.lower(Spent.name).contains(search_lower),
-                func.lower(Spent.description).contains(search_lower)
+                Spent.name.like(f"%{search}%"),
+                Spent.description.like(f"%{search}%")
             )
         )
 
