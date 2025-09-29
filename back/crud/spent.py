@@ -36,10 +36,11 @@ def get_spents(
     if amount_max is not None:
         query = query.filter(Spent.amount <= amount_max)
     if search:
+        search_lower = search.lower()
         query = query.filter(
             or_(
-                Spent.name.ilike(f"%{search}%"),
-                Spent.description.ilike(f"%{search}%")
+                func.lower(Spent.name).contains(search_lower),
+                func.lower(Spent.description).contains(search_lower)
             )
         )
 
@@ -59,6 +60,7 @@ def get_spents(
     ]
 
 def create_spent(db: Session, spent: SpentCreate):
+    spent.name = spent.name.capitalize()
     existing_spents = db.query(Spent).filter(Spent.amount == spent.amount, Spent.name == spent.name, Spent.date == spent.date, Spent.category_id == spent.category_id, Spent.user_id == spent.user_id).first()
     if existing_spents:
         raise HTTPException(status_code=409, detail="Cette dépense existe déjà !")
