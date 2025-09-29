@@ -13,7 +13,7 @@ const SearchBar = ({ onSearch }) => {
             <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="border rounded-2xl p-1 bg-white/80"
+                className="border rounded-2xl p-1 bg-white/80 w-fit"
                 placeholder="Rechercher"
             />
         </form>
