@@ -1,8 +1,12 @@
 import { UserProvider } from "../context/UserContext";
 import instance from "./axios"
 
-export const getSpents = async (id) => {
-    const response = await instance.get(`/spents/?user_id=${id}`);
+export const getSpents = async (id, search) => {
+    let url = `/spents/?user_id=${id}`
+    if (search) (
+        url += `&search=${encodeURIComponent(search)}`
+    )
+    const response = await instance.get(url);
     return response.data
 }
 

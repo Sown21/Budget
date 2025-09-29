@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { useUser } from "../context/UserContext";
 import ExportButton from "../components/ExportButton";
 import ImportButton from "../components/ImportButton";
+import SearchBar from "../components/SearchBar";
 
 const Saisis = () => {
     const { selectedUserId } = useUser();
@@ -127,6 +128,16 @@ const Saisis = () => {
         }
     };
 
+    const handleSearch = async (searchValue) => {
+        try {
+            const spents = await getSpents(selectedUserId, searchValue); // getSpents doit accepter le paramètre search
+            spents.sort((a, b) => new Date(b.date) - new Date(a.date));
+            setData(spents);
+        } catch (error) {
+            toast.error("Erreur lors de la recherche !");
+        }
+    };
+
     // État de chargement
     if (loading) {
         return (
@@ -163,14 +174,18 @@ const Saisis = () => {
                 />
             </div>
             <div className="flex flex-col">
-                <div className="flex justify-end mx-15 gap-2">
-                    <ImportButton userId={selectedUserId} onSuccess={async () => {
-                        const spents = await getSpents(selectedUserId);
-                        spents.sort((a, b) => new Date(b.date) - new Date(a.date));
-                        setData(spents);
-                    }} />
-                    <ExportButton userId={selectedUserId} />
+                <div className="flex justify-between">
+                    <SearchBar onSearch={handleSearch} />
+                    <div className="flex justify-end mx-15 gap-2">
+                        <ImportButton userId={selectedUserId} onSuccess={async () => {
+                            const spents = await getSpents(selectedUserId);
+                            spents.sort((a, b) => new Date(b.date) - new Date(a.date));
+                            setData(spents);
+                        }} />
+                        <ExportButton userId={selectedUserId} />
+                    </div>
                 </div>
+
                 
                 <Table 
                     data={data}
